@@ -34,3 +34,8 @@ def pathRoute(file):
 
 
 app.run(host = "0.0.0.0", port = 8080)
+
+
+""" MARCO ADDED THESE COMMENTS FOR TESTING
+LET'S SEE IF IT WORKS
+"""
