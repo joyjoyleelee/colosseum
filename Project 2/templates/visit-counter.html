@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<head>
+    <title> Cookies! </title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('pathRoute', file='style.css')}}"/>
+</head>
+
+<body>
+    <div class="center"><h1> Cookie Counter </h1></div>
+    <!-- {%for i in range(0, value)%}
+    <img src='https://cdnb.artstation.com/p/assets/images/images/022/734/219/original/ivan-maranan-cookie-talking.gif?1576512500' style='height: 10vmax; width: 10vmax;'>
+    {%endfor%} -->
+    {%if value < 10%}
+    <div class="center"><p> You've been here {{value}} times! </p></div>
+    {%else%}
+    <div class="center"><p> A different thing: {{value}}</p></div>
+    {%endif%}
+</body>
+
+</html>

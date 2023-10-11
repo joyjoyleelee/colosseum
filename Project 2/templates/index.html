@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+<head>
+    <title> Temporary </title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('pathRoute', file='style.css')}}"/> <!--url_for is creating the urls for us-->
+</head>
+
+<body>
+    <div class="center"><h1> Whatever i want </h1></div>   
+    <div class="center"><img src="{{url_for('pathRoute', file='image/cinna.png')}}" class="cinna"></div> <!--can put multiple classes: class="cinna" "start"-->
+    <div class="center"><p> fill this in later </p></div>
+    <div class="center"><a href = "{{url_for('next')}}"><button class="start" id="btn"> start </button></a></div> <!--a = article tag that makes the button into like a hyperlink*/-->
+    <script src="{{url_for('pathRoute', file='script.js')}}"></script>
+</body>
+
+</html>
