@@ -38,7 +38,7 @@ app.run(host = "0.0.0.0", port = 8080)
 
 """If you were able to clone the project, make a comment here with your name and COMMIT"""
 #Joy was here :)
-
+#Thierry was here
 
 """ MARCO ADDED THESE COMMENTS FOR TESTING
 LET'S SEE IF IT WORKS
@@ -50,9 +50,9 @@ rizzlordswang57 v2df
 
 """Joy's branch"""
 
-rizzlordswang57
-i hate it. Iyanu k
-"""
+#rizzlordswang57
+#i hate it. Iyanu k
+
 
 """Levi's Branch"""
 
