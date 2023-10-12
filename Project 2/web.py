@@ -35,5 +35,14 @@ def pathRoute(file):
 
 app.run(host = "0.0.0.0", port = 8080)
 
+<<<<<<< HEAD
 """If you were able to clone the project, make a comment here with your name and COMMIT"""
 #Joy was here :)
+=======
+
+""" MARCO ADDED THESE COMMENTS FOR TESTING
+LET'S SEE IF IT WORKS
+"""
+
+"""Joy's branch"""
+>>>>>>> 79c1c0caac3309a76f661ce1a00992dc383ce2cb
