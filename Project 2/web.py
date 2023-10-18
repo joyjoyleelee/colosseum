@@ -1,6 +1,14 @@
-from flask import Flask, render_template, make_response, url_for, request, send_from_directory
+from flask import Flask, render_template, make_response, url_for, request, send_from_directory,bcrypt,redirect
+from pymongo import MongoClient
+from secrets import token_urlsafe
+
 
 app = Flask(__name__) #setting this equal to the file name (web.py)
+mongo_client = MongoClient("mongodb://mongo:27017")
+db = mongo_client["cse312"]
+chat_collection = db["chat"]
+users_collection = db['users']
+
 
 @app.route("/") #index.html
 def home():
@@ -32,6 +40,25 @@ def pathRoute(file):
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
+@app.route("/registration",methods =['POST'])
+def register():
+    #Store username and salted, hashed password in database
+    salt = bcrypt.gensalt()
+    the_hash = bcrypt.hashpw(request.form('password').encode(), salt)
+    users_collection.insert_one({"username": request.form['username'], "password": the_hash})
+    return redirect(url_for('/'))
+
+@app.route("/login",methods =['POST'])
+def login():
+    #DB represents database
+    DB = users_collection.find_one({"username": request.form['username']})
+    # access the password associated with the username
+    Pw = DB.get("password", b"none")
+    # access the password associated with what the user gave us
+    passw = request.form('password').encode()
+    # compare if the passwords are the same
+    if bcrypt.checkpw(passw, Pw):
+        num1 = token_urlsafe(13)
 
 app.run(host = "0.0.0.0", port = 8080)
 
