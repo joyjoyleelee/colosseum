@@ -1,15 +1,79 @@
-<!DOCTYPE html>
-
+<!--Literally copy + paste from HW 2 index.html-->
+<html>
 <head>
-    <title> Temporary </title>
-    <link rel="stylesheet" type="text/css" href="{{url_for('pathRoute', file='style.css')}}"/> <!--url_for is creating the urls for us-->
+    <title>CSE312 Homework App</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('pathRoute', file='design/style.css')}}"/>
+        
+        <!--CITE: https://youtu.be/q9YVDrKvzxY-->
+        <link rel="icon" type="image/png" href="{{url_for('pathRoute', file='static/image/cinna.png')}}">
+
 </head>
 
-<body>
-    <div class="center"><h1> Whatever i want </h1></div>   
-    <div class="center"><img src="{{url_for('pathRoute', file='image/cinna.png')}}" class="cinna"></div> <!--can put multiple classes: class="cinna" "start"-->
-    <div class="center"><p> fill this in later </p></div>
-    <div class="center"><a href = "{{url_for('next')}}"><button class="start" id="btn"> start </button></a></div> <!--a = article tag that makes the button into like a hyperlink*/-->
+<body onload="welcome();">
+
+    <div class="title">
+        <h2>CSE312 App</h2>
+    </div>
+   
+    <div class="header">
+        <div class="image_div">
+            <img src="{{url_for('pathRoute', file='static/image/cinna.png')}}" alt="Cinna" class="my_image"/>
+        </div>
+        <div>
+
+            <p id="paragraph">
+                Welcome to Cinnamoroll Chat! Feel free to DM your friends and share some pics ❤️
+            </p>
+        </div>
+    </div>
+
+
+<div class="contents">
+    <div class="chat">
+        <div id="chat-messages">
+        </div>
+
+        <div class="chat-form">
+            <hr>
+            <label>
+                Chat:
+                <input id="chat-text-box" type="text">
+                <input id="xsrf" type="text" value="this is going to get replaced soon" hidden>
+            </label>
+            <button id="chat-button" onclick="sendChat()">Send</button>
+        </div>
+
+    </div>
+
+    <div class="user-list">
+            Register:
+            <form action="/register" method="post" enctype="application/x-www-form-urlencoded">
+                <label>Username:
+                    <input id="reg-form-username" type="text" name="username_reg"/>
+                </label>
+                <br/>
+                <label>Password:&nbsp;
+                    <input id="reg-form-pass" type="password" name="password_reg">
+                </label>
+                <input type="submit" value="Post">
+            </form>
+
+            Login:
+            <form action="/login" method="post" enctype="application/x-www-form-urlencoded">
+                <label>Username:
+                    <input id="login-form-username" type="text" name="username_login"/>
+                </label>
+                <br/>
+                <label>Password:&nbsp;
+                    <input id="login-form-pass" type="password" name="password_login">
+                </label>
+                <input type="submit" value="Post">
+            </form>
+
+
+        </div>
+    </div>
+
     <script src="{{url_for('pathRoute', file='script.js')}}"></script>
 </body>
 
