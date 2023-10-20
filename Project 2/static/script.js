@@ -84,7 +84,8 @@ function welcome() {
             sendChat();
         }
     });
-
+    
+    console.log("got into the welcome page")
     document.getElementById("paragraph").innerHTML += "<br/>This text was added by JavaScript 😀";
     document.getElementById("chat-text-box").focus();
 
