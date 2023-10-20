@@ -3,15 +3,15 @@ this is for our 312 project guys :)
 
 ## Tasks
 ### LO1
-- [ ] Set up the registration form
-    - [ ] Store username and salted, hashed password in database
-- [ ] Set up the login form
-    - [ ] Check if username and salted, hashed password exists in database
+- [X] Set up the registration form
+    - [X] Store username and salted, hashed password in database
+- [X] Set up the login form
+    - [X] Check if username and salted, hashed password exists in database
         -IF YES
-            - [ ] Set authentication cookie
+            - [X] Set authentication cookie
             - [ ] Display username somewhere
         -IF NO
-            -[ ] Error message (error page)
+            -[X] Error message (error page)
 
 ### LO2
 - [ ] Create user post form (with title + description)

@@ -4,15 +4,30 @@
         <title>CSE312 Homework App CINNA</title>
         <link rel="stylesheet" type="text/css" href="{{url_for('pathRoute', file='static/design/style.css')}}"/>
         
-        <!--CITE: https://youtu.be/q9YVDrKvzxY-->
+        <!--FAVICON -- CITE: https://youtu.be/q9YVDrKvzxY-->
         <link rel="icon" type="image/png" href="{{url_for('pathRoute', file='static/image/cinna.png')}}">
 
+        <!--STYLING STUFF -- CITE: https://www.w3docs.com/snippets/css/how-to-style-input-and-submit-buttons.html-->
+        <style>
+            input[type=submit] {
+                padding: 0.4vmax 1vmax;
+                background-color: #ffa9e1;
+                border: 0.4vmax solid #fff;
+                outline: none;
+                border-radius: 25px;
+                box-shadow: 0 0 1vmax #ffa9e1 ;
+                font-size: 1vmax;
+                color: rgb(167, 26, 136);
+                letter-spacing: 0.4px;
+                cursor: pointer;
+            }
+          </style>
     </head>
 
     <body onload="welcome();">
 
     <div class="title">
-        <h2>CSE312 App</h2>
+        <h2 style="font-family: cursive">CSE312 App</h2>
     </div>
 
     <div class="header">
@@ -21,7 +36,7 @@
         </div>
         <div>
 
-            <p id="paragraph">
+            <p id="paragraph" style="font-family: cursive">
                 Welcome to Cinnamoroll Chat! Feel free to DM your friends and share some pics ❤️
             </p>
         </div>
@@ -40,7 +55,7 @@
                 <input id="chat-text-box" type="text">
                 <input id="xsrf" type="text" value="this is going to get replaced soon" hidden>
             </label>
-            <button id="chat-button" onclick="sendChat()">Send</button>
+            <button class="button" id="chat-button" style="font-family: cursive" onclick="sendChat()">Send</button>
         </div>
 
     </div>
@@ -55,7 +70,7 @@
                 <label>Password:&nbsp;
                     <input id="reg-form-pass" type="password" name="password_reg">
                 </label>
-                <input type="submit" value="Post">
+                <input type="submit" style="font-family: cursive; background-color: #ffa9e1;" value="Post">
             </form>
 
             Login:
@@ -67,7 +82,7 @@
                 <label>Password:&nbsp;
                     <input id="login-form-pass" type="password" name="password_login">
                 </label>
-                <input type="submit" value="Post">
+                <input type="submit" style="font-family: cursive; background-color: #ffa9e1;" value="Post">
             </form>
 
 

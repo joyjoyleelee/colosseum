@@ -1,6 +1,6 @@
 
 body {
-    background-color: #000000;
+    background-color: #6155A6;
     color: white;
 }
 
@@ -21,6 +21,7 @@ img.post {
 }
 
 .header {
+    border-radius: 25px; /*makes corners rounded*/
     display: flex;
     background-color: #ffa9e1;
     color: rgb(167, 26, 136);
@@ -35,21 +36,25 @@ img.post {
 }
 
 .chat {
+    border-radius: 25px; /*makes corners rounded*/
     width: 70%;
     background-color: #819cff;
     padding: 20px;
 }
 
 #chat-messages {
+    border-radius: 25px; /*makes corners rounded*/
     height: 90%;
     overflow: scroll;
 }
 
 .chat-form {
+    border-radius: 25px; /*makes corners rounded*/
     height: 30px;
 }
 
 .user-list {
+    border-radius: 25px; /*makes corners rounded*/
     width: 30%;
     background-color: #445fc1;
     color: #ffa9e1;
@@ -57,5 +62,20 @@ img.post {
 }
 
 .header > div {
+    border-radius: 25px; /*makes corners rounded*/
     padding: 20px;
+}
+
+/*Adding button design*/
+.button {
+    padding: 0.4vmax 1vmax;
+    background-color: #ffa9e1;
+    border: 0.4vmax solid #fff;
+    outline: none;
+    border-radius: 25px;
+    box-shadow: 0 0 1vmax #ffa9e1 ;
+    font-size: 1vmax;
+    color: rgb(167, 26, 136);
+    letter-spacing: 0.4px;
+    cursor: pointer;
 }
