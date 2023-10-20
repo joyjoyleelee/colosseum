@@ -13,7 +13,7 @@ this is for our 312 project guys :)
 - [ ] Display username somewhere
 
 #### IF NO
--[X] Error message (error page)
+- [X] Error message (error page)
 
 ### LO2
 - [ ] Create user post form (with title + description)
