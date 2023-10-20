@@ -68,9 +68,9 @@ img.post {
 
 /*Adding button design*/
 .button {
-    padding: 0.4vmax 1vmax;
+    padding: 0.2vmax 0.4vmax;
     background-color: #ffa9e1;
-    border: 0.4vmax solid #fff;
+    border: 0.2vmax solid #fff;
     outline: none;
     border-radius: 25px;
     box-shadow: 0 0 1vmax #ffa9e1 ;
