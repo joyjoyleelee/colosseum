@@ -7,10 +7,10 @@ this is for our 312 project guys :)
     - [X] Store username and salted, hashed password in database
 - [X] Set up the login form
     - [X] Check if username and salted, hashed password exists in database
-        -IF YES
+        -[ ] IF YES
             - [X] Set authentication cookie
             - [ ] Display username somewhere
-        -IF NO
+        -[ ] IF NO
             -[X] Error message (error page)
 
 ### LO2
