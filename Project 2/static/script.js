@@ -19,7 +19,7 @@ function deleteMessage(messageId) {
         }
     }
     console.log(messageID)
-    request.open("DELETE", "/chat-message/" + messageId);
+    request.open("POST", "/chat-likes/" + messageId);
     request.send();
 }
 

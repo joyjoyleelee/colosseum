@@ -171,6 +171,8 @@ def readPost():
     response = make_response(json.dumps(all_posts), 200)
     return response
 
+#@app.route("/chat-likes/")
+
 
 app.run(host = "0.0.0.0", port = 8000)
 
