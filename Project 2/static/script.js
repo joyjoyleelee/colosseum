@@ -33,8 +33,9 @@ function chatMessageHTML(messageJSON) {
         "<h1>" + messageTitle + "</h1>" +
         "<h3>" + username + "</h3>" +
         "<p>" + message + "</p>" +
-        "<p><button onclick='deleteMessage(\"" + messageId + "\")'>💓</button></p>" +
-    "</article>";
+        "<p><button onclick='deleteMessage(\"" + messageId + "\")' id='heart'>❤️</button></p>" +
+        "CHangeMe" +
+        "</article>";
     // let messageHTML = "<br><button onclick='deleteMessage(\"" + messageId + "\")'>X</button> ";
     //messageHTML += "<span id='message_" + messageId + "'>" + "<b>" + username + "</b>: " + message + "</span>";
     return messageHTML;
