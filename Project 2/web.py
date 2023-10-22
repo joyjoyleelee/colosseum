@@ -144,7 +144,9 @@ def makePost():
     db_obj = post # Object that will be sent to the database
     db_obj["username"] = username # Add username to the object
     db_obj["_id"] = token_urlsafe(16) # Randomly generate messageID
+    db_obj['id'] = token_urlsafe(16)
     db_obj["likes"] = 0 # Adds a tracker for the number of likes
+
     db_obj["liked_users"] = [] #Adds a tracker for the users who have liked the message
     chat_collection.insert_one(db_obj)
 
