@@ -147,7 +147,7 @@ def makePost():
     db_obj['id'] = token_urlsafe(16)
     db_obj["likes"] = 0 # Adds a tracker for the number of likes
 
-    db_obj["liked_users"] = [] #Adds a tracker for the users who have liked the message
+    db_obj["liked_users"] = [] #Adds a tracker for the users who have liked the messageu
     chat_collection.insert_one(db_obj)
 
     # Respond with message
