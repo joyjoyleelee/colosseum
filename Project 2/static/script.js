@@ -108,7 +108,7 @@ function getName() {
   name = "The current user is: " + name;
   let username = document.getElementById("user_display");
   username.innerHTML = name
-  return messageHTML
+  return username
 }
 
 

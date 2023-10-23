@@ -4,6 +4,7 @@ from secrets import token_urlsafe
 import bcrypt
 import hashlib
 import json
+import html
 from bson.binary import Binary
 import base64
 
@@ -34,10 +35,10 @@ def home():
     authToken_hashed = hashlib.sha256(auth_token.encode('utf-8')).digest()
     userToken = auth_token_collection.find_one({"auth_token": authToken_hashed})
     if userToken == None:
-        response.set_cookie("username", "Guest")
+        response.set_cookie("username", "Guest", httponly=True)
     else:
         user = userToken["username"]
-        response.set_cookie("username", user)
+        response.set_cookie("username", user, httponly=True)
     return response
 
 @app.route("/next") #next.html
@@ -57,7 +58,7 @@ def cookie():
     #Create the response
     response = make_response(render_template("visit-counter.html", value = cookie_value), 200) #you can create variables (like value) and use in HTML!
     response.headers["X-Content-Type-Options"] = "nosniff"
-    response.set_cookie("visits", str(cookie_value), max_age= 7200)
+    response.set_cookie("visits", str(cookie_value), max_age= 7200, httponly=True)
     return response
 
 @app.route("/<path:file>")
@@ -123,7 +124,7 @@ def login():
 
             #Set the authentication cookie and add to auth_token database named "auth_tokens"
             auth_token_hashed = hashlib.sha256(auth_token.encode('utf-8')).digest()
-            response.set_cookie("auth_token", str(auth_token), max_age= 3600)
+            response.set_cookie("auth_token", str(auth_token), max_age= 3600, httponly=True)
             auth_token_collection.insert_one({"username": request.form['username_login'], "auth_token": auth_token_hashed})
 
         else:
@@ -172,6 +173,10 @@ def postsFromDB():
     ret_list = []
     all_posts = chat_collection.find({})
     for p in all_posts:
+        #Escape HTML in the posts
+        p["title"] = html.escape(p["title"])
+        p["message"] = html.escape(p["message"])
+        p["username"] = html.escape(p["username"])
         ret_list.append(p)
     return ret_list
 
