@@ -176,21 +176,25 @@ def addLike():
     request_data = request.data
     message_id = request_data.decode("utf-8")
     message_id = message_id[1:-1]
-    print(message_id)
-    mess = chat_collection.find_one({"id",message_id}) #Gets the message data from the message ID
+    mess = chat_collection.find_one({"id":message_id}) #Gets the message data from the message ID
     likes = mess["likes"] #Finds the number of likes using message id
     userLikes = mess["liked_users"] #Finds the list of users using message ID
-    filter = {"id":message_id} #Temporary filter item for updating message later
+    filter = {"id": message_id} #Temporary filter item for updating message later
     auth_token = request.cookies.get("authToken") #Finds the auth token from cookies
     #BELOW finds the user from the auth token
     user = auth_token_collection.find_one({"auth_token": hashlib.sha256(auth_token.encode('utf-8')).digest()})
-    if userLikes.contains(user):
+    print(hashlib.sha256(auth_token.encode('utf-8')).digest())
+    if user in userLikes:
         userLikes = userLikes.remove(user["username"]) #Removes user name from list of users
         newLikes = likes - 1
         update = {"$set":{"likes": newLikes, "liked_users": userLikes}}
         result = chat_collection.update_one(filter, update)
     else:
-        userLikes = userLikes.append(user["username"])  # Adds user name from list of users
+        print(user)
+        if userLikes == None:
+            userLikes = [user["username"]]
+        else:
+            userLikes = userLikes.append(user["username"])  # Adds user name from list of users
         newLikes = likes + 1
         update = {"$set": {"likes": newLikes, "liked_users": userLikes}}
         result = chat_collection.update_one(filter, update)
