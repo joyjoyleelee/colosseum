@@ -98,7 +98,7 @@ function updateChat() {
 
 function userDisplay(){
     const cookies = document.cookie;
-    const cookies_split = cookies.split("cookie_name=")[1];
+    const username = cookies.split("cookie_name=")[1];
     const username_tag = document.getElementById("user_display")
     username_tag.innerHTML = "Logged in as : " + username
 }
