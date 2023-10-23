@@ -4,6 +4,8 @@ from secrets import token_urlsafe
 import bcrypt
 import hashlib
 import json
+from bson.binary import Binary
+import base64
 
 app = Flask(__name__) #setting this equal to the file name (web.py)
 
@@ -177,24 +179,29 @@ def addLike():
     message_id = request_data.decode("utf-8")
     message_id = message_id[1:-1]
     mess = chat_collection.find_one({"id":message_id}) #Gets the message data from the message ID
+    print(f'mess{mess}')
     likes = mess["likes"] #Finds the number of likes using message id
     userLikes = mess["liked_users"] #Finds the list of users using message ID
     filter = {"id": message_id} #Temporary filter item for updating message later
-    auth_token = request.cookies.get("authToken") #Finds the auth token from cookies
+    auth_token = request.cookies.get("auth_token", "") #Finds the auth token from cookies
     #BELOW finds the user from the auth token
-    user = auth_token_collection.find_one({"auth_token": hashlib.sha256(auth_token.encode('utf-8')).digest()})
-    print(hashlib.sha256(auth_token.encode('utf-8')).digest())
+    print(auth_token)
+    authToken_hashed = hashlib.sha256(auth_token.encode('utf-8')).digest()
+    userToken = auth_token_collection.find_one({"auth_token": authToken_hashed})
+    print(f'user_token:{userToken}')
+    user = userToken["username"]
+    print(f'userLikes:{userLikes}')
     if user in userLikes:
-        userLikes = userLikes.remove(user["username"]) #Removes user name from list of users
+
+        userLikes.remove(user) #Removes user name from list of users
         newLikes = likes - 1
         update = {"$set":{"likes": newLikes, "liked_users": userLikes}}
         result = chat_collection.update_one(filter, update)
     else:
         print(user)
-        if userLikes == None:
-            userLikes = [user["username"]]
-        else:
-            userLikes = userLikes.append(user["username"])  # Adds user name from list of users
+        print(f'userlikes before:{userLikes}')
+        userLikes.append(user)  # Adds user name from list of users
+        print(f'userLikes after:{userLikes}')
         newLikes = likes + 1
         update = {"$set": {"likes": newLikes, "liked_users": userLikes}}
         result = chat_collection.update_one(filter, update)
