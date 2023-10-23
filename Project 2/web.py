@@ -11,7 +11,7 @@ import base64
 app = Flask(__name__) #setting this equal to the file name (web.py)
 
 #Establish the mongo database
-mongo_client = MongoClient('localhost')
+mongo_client = MongoClient('mongo_project')
 db = mongo_client["colosseum"]
 chat_collection = db["chat"]
 user_collection = db["users"]
