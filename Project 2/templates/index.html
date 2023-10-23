@@ -1,16 +1,106 @@
-<!DOCTYPE html>
+<!--Literally copy + paste from HW 2 index.html-->
+<html>
+    <head>
+        <title>CSE312 Homework App CINNA</title>
+        <link rel="stylesheet" type="text/css" href="{{url_for('pathRoute', file='static/design/style.css')}}"/>
+        
+        <!--FAVICON -- CITE: https://youtu.be/q9YVDrKvzxY-->
+        <link rel="icon" type="image/png" href="{{url_for('pathRoute', file='static/image/cinna.png')}}">
 
-<head>
-    <title> Temporary </title>
-    <link rel="stylesheet" type="text/css" href="{{url_for('pathRoute', file='style.css')}}"/> <!--url_for is creating the urls for us-->
-</head>
+        <!--STYLING STUFF -- CITE: https://www.w3docs.com/snippets/css/how-to-style-input-and-submit-buttons.html-->
+        <style>
+            input[type=submit] {
+                padding: 0.2vmax 0.4vmax;
+                background-color: #ffa9e1;
+                border: 0.2vmax solid #fff;
+                outline: none;
+                border-radius: 25px;
+                box-shadow: 0 0 1vmax #ffa9e1 ;
+                font-size: 1vmax;
+                color: rgb(167, 26, 136);
+                letter-spacing: 0.4px;
+                cursor: pointer;
+            }
+            input[type=text] {
+                padding: 0.4vmax;
+                border: 0.2vmax solid #ffa9e1;
+                border-radius: 25px;
+            }
+            input[type=password] {
+                padding: 0.4vmax;
+                border: 0.2vmax solid #ffa9e1;
+                border-radius: 25px;
+            }
+          </style>
+    </head>
 
-<body>
-    <div class="center"><h1> Whatever i want </h1></div>   
-    <div class="center"><img src="{{url_for('pathRoute', file='image/cinna.png')}}" class="cinna"></div> <!--can put multiple classes: class="cinna" "start"-->
-    <div class="center"><p> fill this in later </p></div>
-    <div class="center"><a href = "{{url_for('next')}}"><button class="start" id="btn"> start </button></a></div> <!--a = article tag that makes the button into like a hyperlink*/-->
-    <script src="{{url_for('pathRoute', file='script.js')}}"></script>
-</body>
+    <body onload="welcome();">
 
+    <div class="title">
+        <h2 style="font-family: cursive">CSE312 App</h2>
+    </div>
+
+    <div class="header">
+        <div class="image_div">
+            <img src="{{url_for('pathRoute', file='static/image/cinna.png')}}" alt="Cinna" class="my_image"/>
+        </div>
+        <div>
+
+            <p id="paragraph" style="font-family: cursive">
+                Welcome to Cinnamoroll Chat! Feel free to DM your friends and share some pics ❤️
+            </p>
+        </div>
+    </div>
+
+
+<div class="contents">
+    <div class="chat">
+        <div id="chat-messages">
+        </div>
+
+        <div class="chat-form">
+            <hr>
+            <label>
+                Title:
+                <input id="title-box" type="text">
+                Message:
+                <input id="chat-text-box" type="text">
+                <input id="xsrf" type="text" value="this is going to get replaced soon" hidden>
+            </label>
+            <button class="button" id="chat-button" style="font-family: cursive" onclick="sendChat()">Send</button>
+        </div>
+
+    </div>
+
+    <div class="user-list">
+            Register:
+            <form action="/register" method="post" enctype="application/x-www-form-urlencoded">
+                <label>Username:
+                    <input id="reg-form-username" type="text" name="username_reg"/>
+                </label>
+                <br/>
+                <label>Password:&nbsp;
+                    <input id="reg-form-pass" type="password" name="password_reg">
+                </label>
+                <input type="submit" style="font-family: cursive; background-color: #ffa9e1;" value="Post">
+            </form>
+
+            Login:
+            <form action="/login" method="post" enctype="application/x-www-form-urlencoded">
+                <label>Username:
+                    <input id="login-form-username" type="text" name="username_login"/>
+                </label>
+                <br/>
+                <label>Password:&nbsp;
+                    <input id="login-form-pass" type="password" name="password_login">
+                </label>
+                <input type="submit" style="font-family: cursive; background-color: #ffa9e1;" value="Post">
+            </form>
+
+
+        </div>
+    </div>
+
+    <script src="{{url_for('pathRoute', file='static/script.js')}}"></script>
+    </body>
 </html>
