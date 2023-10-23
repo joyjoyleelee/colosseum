@@ -30,15 +30,6 @@ xsrf_token_collection = db["xsrf"]
 def home():
     response = make_response(render_template("index.html"), 200)
     response.headers["X-Content-Type-Options"] = "nosniff"
-    auth_token = request.cookies.get("auth_token", "")  # Finds the auth token from cookies
-    # BELOW finds the user from the auth token
-    authToken_hashed = hashlib.sha256(auth_token.encode('utf-8')).digest()
-    userToken = auth_token_collection.find_one({"auth_token": authToken_hashed})
-    if userToken == None:
-        response.set_cookie("username", "Guest", httponly=True)
-    else:
-        user = userToken["username"]
-        response.set_cookie("username", user, httponly=True)
     return response
 
 @app.route("/next") #next.html
@@ -125,6 +116,7 @@ def login():
             #Set the authentication cookie and add to auth_token database named "auth_tokens"
             auth_token_hashed = hashlib.sha256(auth_token.encode('utf-8')).digest()
             response.set_cookie("auth_token", str(auth_token), max_age= 3600, httponly=True)
+            response.set_cookie("cookie_name", request.form['username_login'])
             auth_token_collection.insert_one({"username": request.form['username_login'], "auth_token": auth_token_hashed})
 
         else:

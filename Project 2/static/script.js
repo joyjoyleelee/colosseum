@@ -96,21 +96,21 @@ function updateChat() {
     request.send();
 }
 
-function getName() {
-    console.log("get into getName")
-    const username = document.cookie
-    console.log(username)
-    const name = "The current user is: " + username;
-    const name_elem = document.getElementById("user_display");
-    name_elem.innerHTML = name
-    return username
+function userDisplay(){
+    const cookies = document.cookie;
+    const cookies_split = cookies.split(";")[0];
+    const username = cookies_split.split("=")[1];
+    const username_tag = document.getElementById("user_display")
+    username_tag.innerHTML = "Logged in as : " + username
 }
+
+
 
 
 function welcome() {
     document.addEventListener("keypress", function (event) {
         if (event.code === "Enter") {
-            sendChat();
+            sendChat(); 
         }
     });
     
@@ -119,7 +119,8 @@ function welcome() {
     document.getElementById("chat-text-box").focus();
     document.getElementById("title-box").focus()
 
+    userDisplay(); // Displays username
     updateChat();
-    getName();
     setInterval(updateChat, 2000);
+    setInterval(userDisplay, 1000);
 }
