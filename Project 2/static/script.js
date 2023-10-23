@@ -18,9 +18,10 @@ function deleteMessage(messageId) {
             console.log(this.response);
         }
     }
-    console.log(messageID)
-    request.open("POST", "/chat-likes/" + messageId);
-    request.send();
+    console.log(messageId)
+    const data = JSON.stringify(messageId);
+    request.open("POST", "/chat-likes");
+    request.send(data);
 }
 
 function chatMessageHTML(messageJSON) {
@@ -28,6 +29,7 @@ function chatMessageHTML(messageJSON) {
     const username = messageJSON.username;
     const message = messageJSON.message;
     const messageId = messageJSON.id;
+    console.log(messageId)
     const messageTitle = messageJSON.title;
     const likes = messageJSON.likes; // Turns the number of likes from message.JSON to number of likes
     // Line below creates the HTML post in article format.
