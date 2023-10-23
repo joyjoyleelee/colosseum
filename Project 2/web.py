@@ -11,7 +11,7 @@ import base64
 app = Flask(__name__) #setting this equal to the file name (web.py)
 
 #Establish the mongo database
-mongo_client = MongoClient('mongo_project')
+mongo_client = MongoClient('mongo')
 db = mongo_client["colosseum"]
 chat_collection = db["chat"]
 user_collection = db["users"]
@@ -209,7 +209,7 @@ def addLike():
 
 
 
-app.run(host = "0.0.0.0", port = 8000)
+app.run(host = "0.0.0.0", port = 8080)
 
 
 """If you were able to clone the project, make a comment here with your name and COMMIT"""

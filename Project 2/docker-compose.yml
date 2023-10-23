@@ -1,8 +1,8 @@
 version: '3.3'
 services:
-    mongo_project:
+    mongo:
         image: mongo:4.2.5
-    project_part2:
+    app:
         build: .
         environment:
             WAIT_HOSTS: mongo:27017
