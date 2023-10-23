@@ -79,3 +79,31 @@ img.post {
     letter-spacing: 0.4px;
     cursor: pointer;
 }
+
+
+article {
+    background-color: #fafafa;
+    box-shadow: 10px 5px 5px rgb(255, 169, 225);
+    width: 95%;
+    margin: 10px 40px 30px auto;
+}
+
+
+article > h1, h3, p {
+    color: rgb(167, 26, 136);
+    margin: 10px;
+    font-family: Arial, serif;
+}
+
+article > h1 {
+
+}
+
+article > h3 {
+    font-size: 0.7em;
+    margin-top: -13px;
+}
+
+.heart {
+    color: white;
+}
