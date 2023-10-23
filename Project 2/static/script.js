@@ -97,18 +97,13 @@ function updateChat() {
 }
 
 function getName() {
-  const cookies = document.cookie.split('; ');
-  let name = "";
-  for (const cookie of cookies) {
-    const [cookieName, cookieValue] = cookie.split('=');
-    if (cookieName === "username") {
-      name = cookieValue;
-    }
-  }
-  name = "The current user is: " + name;
-  let username = document.getElementById("user_display");
-  username.innerHTML = name
-  return username
+    console.log("get into getName")
+    const username = document.cookie
+    console.log(username)
+    const name = "The current user is: " + username;
+    const name_elem = document.getElementById("user_display");
+    name_elem.innerHTML = name
+    return username
 }
 
 
