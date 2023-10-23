@@ -46,6 +46,7 @@ function chatMessageHTML(messageJSON) {
     return messageHTML;
 }
 
+
 function clearChat() {
     const chatMessages = document.getElementById("chat-messages");
     chatMessages.innerHTML = "";
@@ -95,6 +96,22 @@ function updateChat() {
     request.send();
 }
 
+function getName() {
+  const cookies = document.cookie.split('; ');
+  let name = "";
+  for (const cookie of cookies) {
+    const [cookieName, cookieValue] = cookie.split('=');
+    if (cookieName === "username") {
+      name = cookieValue;
+    }
+  }
+  name = "The current user is: " + name;
+  let username = document.getElementById("user_display");
+  username.innerHTML = name
+  return messageHTML
+}
+
+
 function welcome() {
     document.addEventListener("keypress", function (event) {
         if (event.code === "Enter") {
@@ -108,5 +125,6 @@ function welcome() {
     document.getElementById("title-box").focus()
 
     updateChat();
+    getName();
     setInterval(updateChat, 2000);
 }
