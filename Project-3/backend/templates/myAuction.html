@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items List</title>
+</head>
+<body>
+
+<!-- Container to hold dynamically generated items -->
+<div id="itemsContainer"></div>
+
+<script>
+    // Example data received from the GET request
+    var itemsList = [
+        {
+            itemName: "Item 1",
+            itemDescription: "Description 1",
+            timeRemaining: "2 days",
+            price: "$50",
+            currentUserBidding: "User A",
+            userPostedListing: "User B",
+            photoName: "item1.jpg"
+        },
+        {
+            itemName: "Item 2",
+            itemDescription: "Description 2",
+            timeRemaining: "1 day",
+            price: "$30",
+            currentUserBidding: "User C",
+            userPostedListing: "User D",
+            photoName: "item2.jpg"
+        }
+        // Add more items as needed
+    ];
+
+    // Function to dynamically generate items and populate the HTML
+    function populateItems() {
+        var itemsContainer = document.getElementById('itemsContainer');
+
+        // Loop through each item in the list
+        for (var i = 0; i < itemsList.length; i++) {
+            var item = itemsList[i];
+
+            // Create HTML elements for each item
+            var itemDiv = document.createElement('div');
+            itemDiv.innerHTML = `
+                <h2>${item.itemName}</h2>
+                <p>${item.itemDescription}</p>
+                <p>Time Remaining: ${item.timeRemaining}</p>
+                <p>Price: ${item.price}</p>
+                <p>Current User Bidding: ${item.currentUserBidding}</p>
+                <p>User Posted Listing: ${item.userPostedListing}</p>
+                <img src="path/to/your/photo/folder/${item.photoName}" alt="${item.itemName}">
+                <hr>
+            `;
+
+            // Append the item to the container
+            itemsContainer.appendChild(itemDiv);
+        }
+    }
+
+    // Call the function to populate items when the page loads
+    window.onload = populateItems;
+</script>
+
+</body>
+</html>
