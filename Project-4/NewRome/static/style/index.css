@@ -1,0 +1,8 @@
+body {
+    font-family: sans-serif;
+    padding: 20px;
+}
+
+body .homepage {
+    background-image: url(https://rome.us/wp-content/uploads/Ancient-Roman-Sites-and-Ruins-jpg.webp);
+}
