@@ -131,7 +131,7 @@ def process_register():
             # Store username and salted, hashed password in database
             salt = bcrypt.gensalt()
             the_hash = bcrypt.hashpw(data.get("password").encode(), salt)
-            user_collection.insert_one({"username": data.get("username"), "password": the_hash})
+            user_collection.insert_one({"username": data.get("username"), "password": the_hash, "verfied": False})
 
             # Possibly create new response headers before returning response
             # response = make_response(render_template("index.html"), 200)
