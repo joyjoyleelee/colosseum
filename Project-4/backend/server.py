@@ -12,6 +12,8 @@ from email.mime.text import MIMEText
 import base64
 from googleapiclient.discovery import build
 import secrets
+from google.auth.transport.requests import Request
+import os
 
 app = Flask(__name__) #setting this equal to the file name (web.py)
 CORS(app, origins='http://localhost:3000/', supports_credentials=True)
@@ -125,7 +127,6 @@ def smd():
 
 #Set up the registration form ---------------------------------------------------------------------------------------------------------------------
 @app.route("/registerUser", methods =['POST'])
-
 def process_register():
 
         data = request.json
@@ -137,6 +138,9 @@ def process_register():
             salt = bcrypt.gensalt()
             the_hash = bcrypt.hashpw(data.get("password").encode(), salt)
             user_collection.insert_one({"username": data.get("username"), "password": the_hash})
+
+            #Code to send the email
+            sendEmail(data['username'])
 
             # Possibly create new response headers before returning response
             # response = make_response(render_template("index.html"), 200)
@@ -399,14 +403,15 @@ def totalAuctions():
     return jsonify({"message": "All auctions found", "auctions": allposts}) #should be a list of JSON dicts
 
 
+REDIRECT_URI = 'http://localhost:5000/oauth/callback'
 
 def sendEmail(email):
     # Scopes for Gmail API access
     SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
     # Get credentials via OAuth 2.0 flow
-    flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-    credentials = flow.run_local_server(port=0)
+    flow = InstalledAppFlow.from_client_secrets_file('credentials.json', scopes=SCOPES, redirect_uri=REDIRECT_URI)
+    credentials = flow.run_local_server(port=8000)
 
     # Save and load credentials for later use
     creds = credentials.to_json()
@@ -424,6 +429,8 @@ def sendEmail(email):
 
     message = create_message('csewebdev7@gmail.com', email, 'Trajan Marketplace Email Confirmation', 'Click the link below to verify account\n'+link)
     send_message(service, 'me', message)
+    print("user email has been sent, or at least the code has run")
+    return
 
 def create_message(sender, to, subject, message_text):
     message = MIMEText(message_text)
