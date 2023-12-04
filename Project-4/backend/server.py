@@ -190,7 +190,7 @@ def login():
             response = make_response('0', 404)
             response.headers["X-Content-Type-Options"] = "nosniff"
         # Compare if the passwords are the same - returns True or False
-        elif (bcrypt.checkpw(input_password, database_password)):
+        elif (bcrypt.checkpw(input_password, database_password) and user_collection.find_one({"username": data['username']})['verified'] ==  True):
             auth_token = token_urlsafe(13)  # creates unique token, the 13 is the entropy
 
             # Make response if PASSWORDS MATCH
