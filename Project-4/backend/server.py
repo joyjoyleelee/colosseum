@@ -427,6 +427,9 @@ def sendEmail(email):
 
     email_token_collection.insert_one({"email":email,"token":token})
 
+    print("email", email)
+    print("link", link)
+
     message = create_message('csewebdev7@gmail.com', email, 'Trajan Marketplace Email Confirmation', 'Click the link below to verify account\n'+link)
     send_message(service, 'me', message)
     print("user email has been sent, or at least the code has run")
