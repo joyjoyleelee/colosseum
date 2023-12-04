@@ -1,3 +1,4 @@
+import flask
 from flask import Flask, render_template, make_response, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -6,6 +7,14 @@ import bcrypt
 import html
 import hashlib
 from secrets import token_urlsafe
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.errors import HttpError
+from email.mime.text import MIMEText
+import base64
+from googleapiclient.discovery import build
+import secrets
+from google.auth.transport.requests import Request
+import os
 
 
 app = Flask(__name__) #setting this equal to the file name (web.py)
@@ -18,6 +27,7 @@ db = mongo_client["colosseum"]
 user_collection = db["users"]
 auth_token_collection = db["auth_tokens"]
 listings_collection = db["listings"]
+email_token_collection = db["email_tokens"]
 
 # Delete collection records. --- ALERT """ FOR TESTING ONLY MAKE SURE TO REMOVE
 # chat_collection.delete_many({})
@@ -51,6 +61,25 @@ def logPage():
     response = make_response(render_template("login.html"), 200)
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
+
+@app.route('/verify/<path:verification_code>')
+def verify_email(verification_code):
+    # Use verification_code variable here in your logic
+
+    record = email_token_collection.find_one({"token": verification_code})
+    if record is not None:
+        user_email = record['email']
+        user_collection.find_one_and_update({"username": user_email}, {"$set": {"verified": True}})
+        pass
+        #return home page
+        response = make_response(render_template("index.html"), 200)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        return response
+    else:
+        #return error message
+        return flask.redirect('/404')
+
+    #return f"Verification Code: {verification_code}"
 
 @app.route("/register") #index.html
 def regPage():
@@ -129,8 +158,11 @@ def process_register():
         if user_collection.find_one({"username": data.get("username")}) is None:
             # Store username and salted, hashed password in database
             salt = bcrypt.gensalt()
-            the_hash = bcrypt.hashpw(data.get("password").encode(), salt)
-            user_collection.insert_one({"username": data.get("username"), "password": the_hash})
+            the_hash = bcrypt.hashpw(data.get("password").encode(), salt)#df
+            user_collection.insert_one({"username": data.get("username"), "password": the_hash, "verified": False})
+
+            #Code to send the email
+            sendEmail(data['username'])
 
             # Possibly create new response headers before returning response
             # response = make_response(render_template("index.html"), 200)
@@ -173,7 +205,7 @@ def login():
             response = make_response('0', 404)
             response.headers["X-Content-Type-Options"] = "nosniff"
         # Compare if the passwords are the same - returns True or False
-        elif (bcrypt.checkpw(input_password, database_password)):
+        elif (bcrypt.checkpw(input_password, database_password) and user_collection.find_one({"username": data['username']})['verified'] ==  True):
             auth_token = token_urlsafe(13)  # creates unique token, the 13 is the entropy
 
             # Make response if PASSWORDS MATCH
@@ -393,6 +425,57 @@ def totalAuctions():
     return jsonify({"message": "All auctions found", "auctions": allposts}) #should be a list of JSON dicts
 
 
+REDIRECT_URI = 'http://localhost:5000/oauth/callback'
+
+def sendEmail(email):
+    # Scopes for Gmail API access
+    SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+
+    # Get credentials via OAuth 2.0 flow
+    flow = InstalledAppFlow.from_client_secrets_file('credentials.json', scopes=SCOPES, redirect_uri=REDIRECT_URI)
+    credentials = flow.run_local_server(port=8000)
+
+    # Save and load credentials for later use
+    creds = credentials.to_json()
+    with open('token.json', 'w') as token:
+        token.write(creds)
+
+    # Build Gmail service with obtained credentials
+    service = build('gmail', 'v1', credentials=credentials)
+
+    # Creating the link being sent:
+    token = secrets.token_hex(10)
+    # Link below for live site:
+    #link = "https://romanempire.online/verify/"+token
+    # Link below for localhost:
+    link = "localhost:8080/verify/" + token
+
+    email_token_collection.insert_one({"email":email,"token":token})
+
+    print("email", email)
+    print("link", link)
+
+    message = create_message('csewebdev7@gmail.com', email, 'Trajan Marketplace Email Confirmation', 'Click the link below to verify account\n'+link)
+    send_message(service, 'me', message)
+    print("user email has been sent, or at least the code has run")
+    return
+
+def create_message(sender, to, subject, message_text):
+    message = MIMEText(message_text)
+    message['to'] = to
+    message['from'] = sender
+    message['subject'] = subject
+    raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
+    return {'raw': raw_message}
+
+# Function to send a message
+def send_message(service, user_id, message):
+    try:
+        message = service.users().messages().send(userId=user_id, body=message).execute()
+        print('Message Id: %s' % message['id'])
+        return message
+    except HttpError as error:
+        print('An error occurred: %s' % error)
 
 
 
