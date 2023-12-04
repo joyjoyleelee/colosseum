@@ -1,79 +1,8 @@
 <!DOCTYPE html>
-
-<!--CITE: https://developers.google.com/identity/sign-in/web/server-side-flow#:~:text=To%20create%20a%20client%20ID%20and%20client%20secret%2C,Application%20type%2C%20select%20Web%20application.%20...%20More%20items-->
-<!--Try to set up Google Sign-->
-<!--STEP 2: Include the Google platform library on your page----------------------------------------------------------------------------->
-<!-- The top of file index.html -->
-<html itemscope itemtype="http://schema.org/Article " lang="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- BEGIN Pre-requisites -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-    </script>
-    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
-    </script>
-    <!-- END Pre-requisites -->
-
-<!--STEP 3: Initialize the GoogleAuth object----------------------------------------------------------------------------->
-    <!-- Continuing the <head> section -->
-    <script>
-        function start() {
-            gapi.load('auth2', function() {
-            auth2 = gapi.auth2.init({
-                client_id: '416646761524-7m7avdc4sqcrv6d184sgs7en3t9hbivc.apps.googleusercontent.com',
-                // Scopes to request in addition to 'profile' and 'email'
-                //scope: 'additional_scope'
-            });
-            });
-        }
-        </script>
-    </head>
-    <body>
-        <!--STEP 6: Send the authorization code to the server----------------------------------------------------------------------------->
-        <!-- Last part of BODY element in file index.html -->
-        <script>
-            function signInCallback(authResult) {
-            if (authResult['code']) {
-            
-                // Hide the sign-in button now that the user is authorized, for example:
-                $('#signinButton').attr('style', 'display: none');
-            
-                // Send the code to the server
-                $.ajax({
-                type: 'POST',
-                url: 'http://example.com/storeauthcode',
-                // Always include an `X-Requested-With` header in every AJAX request,
-                // to protect against CSRF attacks.
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                contentType: 'application/octet-stream; charset=utf-8',
-                success: function(result) {
-                    // Handle or verify the server response.
-                },
-                processData: false,
-                data: authResult['code']
-                });
-            } else {
-                // There was an error.
-            }
-            }
-        </script>
-        <!--STEP 4: Add the sign-in button to your page----------------------------------------------------------------------------->
-        <!-- Add where you want your sign-in button to render -->
-        <!-- Use an image that follows the branding guidelines in a real app -->
-        <button id="signinButton">Sign in with Google</button>
-        <script>
-        $('#signinButton').click(function() {
-            // signInCallback defined in step 6.
-            auth2.grantOfflineAccess().then(signInCallback);
-        });
-        </script>
-    </body>
-
-<!--ORIGINAL INDEX.HTML-->
     <title>Login and Register</title>
     <style>
         body {
