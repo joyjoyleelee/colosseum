@@ -56,10 +56,18 @@ def logPage():
 @app.route('/verify/<path:verification_code>')
 def verify_email(verification_code):
     # Use verification_code variable here in your logic
+
     record = auth_token_collection.find_one({"token": verification_code})
-    user_email = record['email']
-    user_collection.find_one_and_update({"username": user_email}, {"$set": {"verified": True}})
-    return f"Verification Code: {verification_code}"
+    if record is not None:
+        user_email = record['email']
+        user_collection.find_one_and_update({"username": user_email}, {"$set": {"verified": True}})
+        pass
+        #return home page
+    else:
+        #return error message
+        pass
+
+    #return f"Verification Code: {verification_code}"
 
 @app.route("/register") #index.html
 def regPage():
