@@ -130,7 +130,7 @@ def process_register():
         if user_collection.find_one({"username": data.get("username")}) is None:
             # Store username and salted, hashed password in database
             salt = bcrypt.gensalt()
-            the_hash = bcrypt.hashpw(data.get("password").encode(), salt)
+            the_hash = bcrypt.hashpw(data.get("password").encode(), salt)#df
             user_collection.insert_one({"username": data.get("username"), "password": the_hash, "verfied": False})
 
             # Possibly create new response headers before returning response
