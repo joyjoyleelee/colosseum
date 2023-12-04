@@ -22,7 +22,7 @@ CORS(app, origins='http://localhost:3000/', supports_credentials=True)
 
 #Establish the mongo database
 #localhost for localhost mongo for docker
-mongo_client = MongoClient('localhost')
+mongo_client = MongoClient('mongo')
 db = mongo_client["colosseum"]
 user_collection = db["users"]
 auth_token_collection = db["auth_tokens"]
@@ -454,9 +454,9 @@ def sendEmail(email):
     # Creating the link being sent:
     token = secrets.token_hex(10)
     # Link below for live site:
-    #link = "https://romanempire.online/verify/"+token
+    link = "https://romanempire.online/verify/"+token
     # Link below for localhost:
-    link = "localhost:8080/verify/" + token
+    # link = "localhost:8080/verify/" + token
 
     email_token_collection.insert_one({"email":email,"token":token})
 
