@@ -430,7 +430,7 @@ def totalAuctions():
     return jsonify({"message": "All auctions found", "auctions": allposts}) #should be a list of JSON dicts
 
 
-REDIRECT_URI = 'http://romanempire.online/oauth/callback'
+REDIRECT_URI = 'https://romanempire.online/oauth/callback'
 
 def sendEmail(email):
     # Scopes for Gmail API access
