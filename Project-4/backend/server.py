@@ -18,6 +18,7 @@ db = mongo_client["colosseum"]
 user_collection = db["users"]
 auth_token_collection = db["auth_tokens"]
 listings_collection = db["listings"]
+email_token_collection = db["email_tokens"]
 
 # Delete collection records. --- ALERT """ FOR TESTING ONLY MAKE SURE TO REMOVE
 # chat_collection.delete_many({})
