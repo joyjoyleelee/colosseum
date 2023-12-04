@@ -1,5 +1,5 @@
 import flask
-from flask import Flask, render_template, make_response, jsonify, request
+from flask import Flask, redirect, render_template, make_response, jsonify, request, url_for
 from flask_cors import CORS
 from pymongo import MongoClient
 from datetime import datetime #this is to keep track of the dates
@@ -22,7 +22,7 @@ CORS(app, origins='http://localhost:3000/', supports_credentials=True)
 
 #Establish the mongo database
 #localhost for localhost mongo for docker
-mongo_client = MongoClient('localhost')
+mongo_client = MongoClient('mongo')
 db = mongo_client["colosseum"]
 user_collection = db["users"]
 auth_token_collection = db["auth_tokens"]
@@ -210,9 +210,10 @@ def login():
 
             # Make response if PASSWORDS MATCH
             #response = make_response(render_template("index.html"), 200)
-            response = make_response('1',200)
+            #response = make_response(redirect(url_for("auction")))
+            response = make_response(redirect(url_for('auction')))
 
-            response.headers["X-Content-Type-Options"] = "nosniff"
+            # response.headers["X-Content-Type-Options"] = "nosniff"
 
             # Set the authentication cookie and add to auth_token database named "auth_tokens"
             auth_token_hashed = hashlib.sha256(auth_token.encode('utf-8')).digest()
@@ -221,6 +222,8 @@ def login():
             auth_token_collection.insert_one(
                 {"username": data['username'], "auth_token": auth_token_hashed})
             islogin =1
+            print("we are valid")
+            print("after the response")
             return response
 
         else:
@@ -230,7 +233,6 @@ def login():
             response.headers["X-Content-Type-Options"] = "nosniff"
             return response
     #response.headers['thierry'] = islogin
-
     print(response)
     return response
 
@@ -417,6 +419,9 @@ def userPostedAuctions():
     else:
         return jsonify({"message": "No auctions found"})
 
+@app.route("/not_verified")
+def not_v():
+    return "<p> not verified</p>"
 
 @app.route("/auctions", methods =['GET'])
 #start with sending ALL auctions - might need to change to just the ones still running later
@@ -431,8 +436,11 @@ def sendEmail(email):
     # Scopes for Gmail API access
     SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    print(f'dir: \n{ROOT_DIR}')
+
     # Get credentials via OAuth 2.0 flow
-    flow = InstalledAppFlow.from_client_secrets_file('credentials.json', scopes=SCOPES, redirect_uri=REDIRECT_URI)
+    flow = InstalledAppFlow.from_client_secrets_file(ROOT_DIR + '/credentials.json', scopes=SCOPES, redirect_uri=REDIRECT_URI)
     credentials = flow.run_local_server(port=8000)
 
     # Save and load credentials for later use
@@ -446,9 +454,9 @@ def sendEmail(email):
     # Creating the link being sent:
     token = secrets.token_hex(10)
     # Link below for live site:
-    #link = "https://romanempire.online/verify/"+token
+    link = "https://romanempire.online/verify/"+token
     # Link below for localhost:
-    link = "localhost:8080/verify/" + token
+    # link = "localhost:8080/verify/" + token
 
     email_token_collection.insert_one({"email":email,"token":token})
 
