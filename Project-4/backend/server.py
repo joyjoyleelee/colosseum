@@ -53,6 +53,14 @@ def logPage():
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
+@app.route('/verify/<path:verification_code>')
+def verify_email(verification_code):
+    # Use verification_code variable here in your logic
+    record = auth_token_collection.find_one({"token": verification_code})
+    user_email = record['email']
+    user_collection.find_one_and_update({"username": user_email}, {"$set": {"verified": True}})
+    return f"Verification Code: {verification_code}"
+
 @app.route("/register") #index.html
 def regPage():
     #index_html
