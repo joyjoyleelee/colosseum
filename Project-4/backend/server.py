@@ -441,7 +441,7 @@ def sendEmail(email):
 
     # Get credentials via OAuth 2.0 flow
     flow = InstalledAppFlow.from_client_secrets_file(ROOT_DIR + '/credentials.json', scopes=SCOPES, redirect_uri=REDIRECT_URI)
-    credentials = flow.run_local_server(port=8000)
+    credentials = flow.run_local_server(port=8080)
 
     # Save and load credentials for later use
     creds = credentials.to_json()
