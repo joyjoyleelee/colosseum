@@ -14,7 +14,7 @@ class User:
     #     self.username = username
     #     self.passcode = passcode
     def register(self, username, passcode, DB):
-        salt = bcrypt.gensalt(12)
+        salt = bcrypt.gensalt(14)
         passcode_hashed = bcrypt.hashpw(passcode.encode(), salt)
         COLLECTION_USER = DB["COLLECTION_USERS"]
         COLLECTION_USER.insert_one({"username": username, "password": passcode_hashed})
@@ -31,12 +31,16 @@ class User:
             password = DB_Item.get("password", "")
             # Verify password
             if (bcrypt.checkpw(passcode_in.encode(), password)):
-                authToken = token_urlsafe(12) #creates unique token
+                authToken = token_urlsafe(14) #creates unique token
                 authToken_hashed = hashlib.sha256(authToken.encode()).digest()
-                COLLECTION_TOKEN.insert_one({"username": username_in, "authToken": authToken_hashed})
+                COLLECTION_TOKEN.insert_one({"username": username_in, "auth_token": authToken_hashed})
         return authToken
 
     def authenticate(self, userToken):
         # Authenticates user via token
         pass
 
+    def is_Authorized(self, user_token):
+        # Funtion returns true if user has successfully logged in. Returns false otherwise.
+        # This function will be used prior to every path being made.
+        pass
