@@ -1,0 +1,62 @@
+/* ----------------------------- Built-In Tags Below -------------------------- */
+textarea {
+        resize: none;
+    }
+
+
+
+
+
+/* ----------------------------- Modify Classes Below -------------------------- */
+.gallery {
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+
+.gallery .listing {
+  background-color: red;
+  width: 100%;
+  max-width: 350px;
+  height: 450px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.gallery img {
+  background-color: pink;
+  width: 80%;
+  max-width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.gallery input {
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.gallery::after {
+  content: "";
+  width: 350px;
+}
+
+.form-file-btn {
+  width:10px;
+}
+. submit-img {
+  width: 5px;
+}

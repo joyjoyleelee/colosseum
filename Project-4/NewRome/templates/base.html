@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NewRome</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="{{url_for('static_files', file='static/client/functions.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static_files', file='static/style/style.css')}}"/>
+</head>
+<body>
+    <!--    NAV BAR     -->
+    <div class="navbar">
+      <a href="#home">Home</a>
+      <a href="#news">News</a>
+      <div class="dropdown">
+        <button class="dropbtn">Auctions
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+          <a href="#">Auctions Create</a>
+          <a href="#">Auctions Market</a>
+          <a href="#">Auctions Won</a>
+        </div>
+      </div>
+        <a href ="#home">Logged in as {{display_name}}</a>
+    </div>
+    <div class="content">
+        {% block content %} {% endblock %}
+    </div>
+</body>
+</html>

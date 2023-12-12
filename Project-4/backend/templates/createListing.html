@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+</head>
+<body>
+
+<!-- Back button in the upper left corner -->
+<a href="/auction" class="btn cancel-btn">Back</a>
+
+<!-- File Upload Section -->
+<div style="margin-top: 20px;">
+    <label for="fileInput">Choose File:</label>
+    <input type="file" id="fileInput">
+    <button onclick="uploadFile()">Upload Image</button>
+    <script src="{{url_for('static', filename='uploadFile.js')}}"></script>
+</div>
+
+<!-- Item Name text field -->
+<p style="margin-top: 20px;">Item Name</p>
+<input type="text" id="itemName">
+
+<!-- Item Description text field -->
+<p>Item Description</p>
+<input type="text" id="itemDescription">
+
+<!-- Date input -->
+<p>Date</p>
+<input type="date" id="itemDate">
+
+<!-- Price text field (accepts only numbers) -->
+<p>Price</p>
+<input type="number" id="itemPrice">
+
+<!-- Submit button with placeholder function -->
+<button style="margin-top: 40px; display: block;" onclick="submitItem()">Submit</button>
+<script src="{{url_for('static', filename='createListing.js')}}"></script>
+
+
+
+
+</body>
+</html>

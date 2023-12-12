@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        /* Style for the form container */
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Style for text fields */
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* Style for buttons */
+        .btn-container {
+            text-align: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+        }
+
+        .cancel-btn {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Back button -->
+<a href="/" class="btn">Back</a>
+
+<!-- Form container -->
+<div class="form-container">
+    <h2>Login Form</h2>
+
+    <!-- Username field -->
+    <label for="username">Username:</label>
+    <input type="text" id="username" placeholder="Enter your username">
+
+    <!-- Password field -->
+    <label for="password">Password:</label>
+    <input type="password" id="password" placeholder="Enter your password">
+
+    <!-- Button container -->
+    <div class="btn-container">
+        <!-- Submit button -->
+        <button class="btn submit-btn" onclick="userLogin()">Login</button>
+        <!-- Cancel button -->
+        <a href="/" class="btn cancel-btn">Cancel</a>
+    </div>
+</div>
+
+<script src="{{url_for('static', filename='login.js')}}"></script>
+
+</body>
+</html>

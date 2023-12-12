@@ -1,0 +1,110 @@
+
+body {
+    background-color: #6155A6;
+    color: white;
+}
+
+.my_image {
+    height: 100%;
+}
+
+.image_div {
+    height: 80%;
+}
+
+img.post {
+    width: 120px;
+}
+
+.title {
+    height: 5%;
+}
+
+.header {
+    border-radius: 25px; /*makes corners rounded*/
+    display: flex;
+    background-color: #ffa9e1;
+    color: rgb(167, 26, 136);
+    height: 17%;
+    align-items: center;
+}
+
+.contents {
+    display: flex;
+    justify-content: space-around;
+    height: 78%
+}
+
+.chat {
+    border-radius: 25px; /*makes corners rounded*/
+    width: 70%;
+    background-color: #819cff;
+    padding: 20px;
+}
+
+#chat-messages {
+    border-radius: 25px; /*makes corners rounded*/
+    height: 90%;
+    overflow: scroll;
+}
+
+.chat-form {
+    border-radius: 25px; /*makes corners rounded*/
+    height: 30px;
+}
+
+.user-list {
+    border-radius: 25px; /*makes corners rounded*/
+    width: 30%;
+    background-color: #445fc1;
+    color: #ffa9e1;
+    padding: 20px;
+}
+
+.header > div {
+    border-radius: 25px; /*makes corners rounded*/
+    padding: 20px;
+}
+
+/*Adding button design*/
+.button {
+    padding: 0.2vmax 0.4vmax;
+    background-color: #ffa9e1;
+    border: 0.2vmax solid #fff;
+    outline: none;
+    border-radius: 25px;
+    box-shadow: 0 0 1vmax #ffa9e1 ;
+    font-size: 1vmax;
+    color: rgb(167, 26, 136);
+    letter-spacing: 0.4px;
+    cursor: pointer;
+}
+
+
+article {
+    background-color: #fafafa;
+    box-shadow: 10px 5px 5px rgb(255, 169, 225);
+    width: 95%;
+    margin: 10px 40px 30px auto;
+}
+
+
+article > h1, h3, p {
+    color: rgb(167, 26, 136);
+    margin: 10px;
+    font-family: Arial, serif;
+}
+
+article > h1 {
+
+}
+
+article > h3 {
+    font-size: 0.7em;
+    margin-top: -13px;
+}
+
+.heart {
+    color: white;
+    background-color: white;
+}
