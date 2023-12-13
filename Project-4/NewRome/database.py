@@ -119,6 +119,22 @@ class Database:
         username = DB_obj.get("username", "Guest")
         return username
 
+    def update_bid(self, username, DB, id_list,bid_num):
+        listings = DB["COLLECTION_LISTINGS"]
+        # add the user to the dictionary
+        listings.update_one({"_id" :  id_list}, {"$set": {f"bidders.{username}": bid_num }})
+        dict = listings.find_one({"_id" :  id_list}).get("bidders")
+        maxbid = max(dict.values())
+        if max(dict.values()) > bid_num:
+            maxbid = bid_num
+            listings.update_one({"_id": id_list}, {"$set": {"bid": maxbid}})
+    def valid_bid(self,bid_num):
+         return bid_num.isnumeric()
+
+
+
+
+
     def xxx(self, DB):
         # Resets The Entire Databases. Only for testing
         u = DB["COLLECTION_USERS"]

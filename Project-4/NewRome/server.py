@@ -1,11 +1,11 @@
-from flask import Flask, make_response, render_template, send_from_directory, request, redirect, flash
+import os
+from os.path import join, dirname, realpath
+
+from flask import Flask, flash, request, redirect
+from flask import make_response, render_template, send_from_directory
 from flask_socketio import SocketIO
 from pymongo import MongoClient
-
-import os
-from flask import Flask, flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
-from os.path import join, dirname, realpath
 
 UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/client_images')
 
@@ -140,5 +140,11 @@ def history_user():
     username = Database.get_username(auth_token, DB)
     all_listings = Database.retrieve_user_listings(username, DB)
     socketio.emit("display_user_listings", all_listings)
+@socketio.on("update_bid")
+def up_bid(bidId,price):
+    if  Database.valid_bid() == True:
+        auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
+        username = Database.get_username(auth_token, DB)
+        Database.update_bid(username,DB,bidId,price)
 
 socketio.run(app=app, host = "0.0.0.0", port = 8080, allow_unsafe_werkzeug=True)
