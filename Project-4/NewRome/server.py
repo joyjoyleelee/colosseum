@@ -142,6 +142,7 @@ def history_user():
     socketio.emit("display_user_listings", all_listings)
 @socketio.on("update_bid")
 def up_bid(bidId,price):
+    print(bidId,price)
     if  Database.valid_bid() == True:
         auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
         username = Database.get_username(auth_token, DB)
