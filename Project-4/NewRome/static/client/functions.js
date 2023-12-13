@@ -24,12 +24,11 @@ function create_listing(){
   desc = desc.value
   let bid = document.getElementById("l-bid");
   bid = bid.value // Initial bid value
-  let time = document.getElementById("l-time")  ;
-  time = time.value // Initial time value
+  let endDate = document.querySelector('input[type="datetime-local"]');
   // 2) Create listing values and send to the server
   let img = document.getElementById("img_src")
   img = img.src
-  const listing = {'title': title, 'desc': desc, 'bid': bid, 'time': time, 'img': img} // Individual listing that will be sent to backend server
+  const listing = {'title': title, 'desc': desc, 'bid': bid, 'time': endDate, 'img': img} // Individual listing that will be sent to backend server
   socketio.emit("listing-create", listing)
 }
 

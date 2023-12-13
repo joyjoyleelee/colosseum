@@ -56,6 +56,7 @@ def register_user():
     password = request.form['password_reg']
     user.register(username, password, DB)
     return redirect("/")
+
 @app.route("/login", methods=["POST"])
 def login_user():
     user = User()
@@ -80,6 +81,7 @@ def render_auctions_create():
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route('/listing-img', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -122,8 +124,8 @@ def image_file(file):
 def connect(listing_json):
     """ This function takes in a JSON format dictionary of the info needed to create the listing.
         It creates the listing and adds it to the database. Then it emits back to JavaScript
-        So that JavaScript can update all listings
-    """
+       So that JavaScript can update all listings
+   """
     print(f'def connect(listing_json): \n{listing_json}')
     auth_token = request.cookies.get('auth_token', 'Guest')
     username = Database.get_username(auth_token, DB)

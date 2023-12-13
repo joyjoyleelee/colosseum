@@ -18,7 +18,25 @@
                 <img id='img_src' src="{{ url_for('static', filename=filename) }}">
                 <textarea id="l-desc" name="description" rows="4" cols="40" placeholder="Enter description"></textarea>
                 <input type="tel" id="l-bid" name="bid" placeholder="Enter starting bid" pattern="[0-9]">
-                <input type="tel" id="l-time" name="time" placeholder="Enter start time in seconds" pattern="[0-9]">
+                <!--Below is the time-->
+                <label for="end-time">Choose a time for your appointment:</label>
+                <input
+                  type="datetime-local"
+                  id="end-time"
+                  name="end-time"
+                  min=""
+                  max="" />
+                <script>
+                    // Get the current date and time in the format required by datetime-local input
+                    const currentDate = new Date().toISOString().slice(0, 16);
+
+                    // Set the input field value to the current date and time
+                    document.getElementById('meeting-time').value = currentDate;
+
+                    // Set the minimum date to the current date and time
+                    document.getElementById('meeting-time').min = currentDate;
+                </script>
+
                 created by <span>MeMario</span>
                 </br>
                 <button type="button" id="create-listing-btn" onclick="create_listing()"> Create Listing</button>
