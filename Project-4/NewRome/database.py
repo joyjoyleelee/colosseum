@@ -16,7 +16,7 @@ import html
     DB["COLLECTION_TOKENS"] - Stores Any Tokens -- {username: '', auth_token: ''}
     DB["COLLECTION_EMAILS"] - Stores Emails -- {username: '', password: '', email: ''}
     DB["COLLECTION_LISTINGS] - Stores All Listings -- format is a dictionary marked below
-    {creator: '', creator_token: '', title: '', desc: '', time: '', open: bool, bidders: [{}], winner: '', bid: int, 
+    {creator: '', creator_token: '', title: '', desc: '', time: '', open: bool, bidders: {}, winner: '', bid: int, 
     _id: '', img: '/path/image.format'}
     ---------------------------------  ---------------- -----------------------------------------
 """
@@ -50,7 +50,7 @@ class Database:
         # Create new listing dictionary and add to the database
         COLLECTION_LISTINGS = DB["COLLECTION_LISTINGS"]
         new_listing = {'creator': username, 'creator_token': auth_token, 'title': title,
-                       'desc': desc, 'time': time, 'open': True, 'bidders': [],
+                       'desc': desc, 'time': time, 'open': True, 'bidders': {},
                        'winner': '', 'bid': bid, '_id': id, 'img': img}
         COLLECTION_LISTINGS.insert_one(new_listing)
         print(f'Database.add_new_listing(self, username, auth_token, listing_json, DB): \n{new_listing}')
@@ -124,8 +124,12 @@ class Database:
         # add the user to the dictionary
         listings.update_one({"_id" :  id_list}, {"$set": {f"bidders.{username}": bid_num }})
         dict = listings.find_one({"_id" :  id_list}).get("bidders")
-        maxbid = max(dict.values())
-        if max(dict.values()) > bid_num:
+        bidn =  listings.find_one({"_id" :  id_list}).get("bid")
+        #maxbid = max(dict.values())
+        print(bidn)
+        print(bid_num)
+        if bidn < bid_num:
+            print("im higher")
             maxbid = bid_num
             listings.update_one({"_id": id_list}, {"$set": {"bid": maxbid}})
     def valid_bid(self,bid_num):
