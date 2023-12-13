@@ -42,11 +42,18 @@ function listing_html(listing_json){
   console.log(listing_json)
   const title = listing_json.title;
   const desc = listing_json.desc;
-  const time = listing_json.time;
+  const tempTime = listing_json.time;
   const bid= listing_json.bid;
   const lid = listing_json._id;
   const img = listing_json.img;
-  const creator = listing_json.creator
+  const creator = listing_json.creator;
+  // BELOW CODE TO CALCULATE TIME REMAINING
+  let now = new Date();
+  let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+  let time = `Time remaining: ${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
 
   let html = `
     <div class='listing' id="listing_${lid}">
