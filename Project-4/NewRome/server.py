@@ -55,7 +55,7 @@ def register_user():
     username = request.form['username_reg']
     password = request.form['password_reg']
     user.register(username, password, DB)
-    return redirect("/")
+    return redirect("/account")
 @app.route("/login", methods=["POST"])
 def login_user():
     user = User()
@@ -66,13 +66,37 @@ def login_user():
         response = make_response("Account Doesn't Exist", 404)
         return response
     else:
-        response = make_response(redirect("/"))
+        response = make_response(redirect("/auctions_create"))
         response.set_cookie("auth_token", str(auth_token), max_age=3600, httponly=True)
         return response
+
+@app.route("/account")
+def render_account_info():
+    response = make_response(render_template("account.html"), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
 
 @app.route("/auctions_create")
 def render_auctions_create():
     response = make_response(render_template("auctions_create.html", filename='client_images/default.png'), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+@app.route("/auctions_list")
+def render_auctions_list():
+    response = make_response(render_template("auctions_list.html", filename='client_images/default.png'), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+@app.route("/auctions_won")
+def render_auctions_won():
+    response = make_response(render_template("auctions_won.html", filename='client_images/default.png'), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+@app.route("/dark_web")
+def render_dark_web():
+    response = make_response(render_template("dark_web.html", filename='client_images/dark-default.png'), 200)
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
@@ -146,5 +170,6 @@ def up_bid(bidId,price):
         auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
         username = Database.get_username(auth_token, DB)
         Database.update_bid(username,DB,bidId,price)
+
 
 socketio.run(app=app, host = "0.0.0.0", port = 8080, allow_unsafe_werkzeug=True)
