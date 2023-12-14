@@ -1,0 +1,16 @@
+/*General Classes*/
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+.labelClass {
+    color: #ede0e8;
+    font-weight: bold;
+    display: block;
+    width: 150px;
+    float: left;
+}

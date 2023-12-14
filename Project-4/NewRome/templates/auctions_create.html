@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+        body {
+          background-image: url('https://knightstemplar.co/wp-content/uploads/2023/07/Medieval-Blacksmiths.jpg');
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-size: cover;
+        }
+
+        input {
+            border-radius: 25px; /*makes corners rounded*/
+        }
+    </style>
+    <div class="create_div">
+      <h1 class="header">CREATE A LISTING</h1>
+    </div>
+    <div class="gallery" id=""  >
+        <div class="listing">
+            <form action="/auctions_create" id="image-form" method="post" enctype="multipart/form-data">
+                <label for="form-file-btn">Select Image: </label>
+                <input id="form-file-btn" class="center" type="file" name="file" accept="image*/">
+                <input id="submit-img" class="center" type="submit" value="Upload Image">
+            </form>
+            <!--            Bid info form           -->
+            <form action="listing-create">
+                <input type="tel" id="l-title" class="center" name="title" placeholder="Enter a title">
+                <img id='img_src' src="{{ url_for('static', filename=filename) }}">
+                <textarea id="l-desc" name="description" rows="4" cols="40" placeholder="Enter description"></textarea>
+                <input type="tel" id="l-bid" class="center" name="bid" placeholder="Enter starting bid" pattern="[0-9]">
+                <input type="tel" id="l-time" class="center" name="time" placeholder="Enter start time in seconds" pattern="[0-9]">
+                created by <span>MeMario</span>
+                </br>
+                <button type="button" id="create-listing-btn" onclick="create_listing()"> Create Listing</button>
+            </form>
+        </div>
+        <div class="listing" id="listing_####">
+            <h3>Roman Citizen Drip</h3>
+            <img src="/static/style_images/drip.png">
+            <textarea id="l-desc" name="description" rows="4" cols="40" disabled>Interested in the latest Roman fashion for citizens? Please consider purchasing from our store! !Outfits will be sold to the highest bidder!
+            </textarea>
+            <input type="tel" id="l-urbid" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
+            <button type="button">Place Bid</button>
+            <button type="button">0</button>
+            <p>Time Remaining: <button type="button">???</button></p>
+            <button type="button">Author: <span>Gaius</span></button>
+            <br><span class="winner_podium" hidden>Winner: <span id="l-winner1">${winner}</span></span>
+        </div>
+        <div class="listing" id="listing_####">
+            <h3>Mysterious Book</h3>
+            <img src="/static/style_images/book.jpg">
+            <textarea id="l-desc" name="description" rows="4" cols="40" disabled>We discovered this mysterious book. It reads: "The Book of Life" Shall you enter? Take it from us. It's terrifying. Yet attractive.
+            </textarea>
+            <input type="tel" id="l-urbid" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
+            <button type="button">Place Bid</button>
+            <button type="button">0</button>
+            <p>Time Remaining: <button type="button">?</button> </p>
+            <button type="button">Author: <span>???</span></button>
+            <br><span class="winner_podium" hidden>Winner: <span id="l-winner2">${winner}</span></span>
+        </div>
+    </div>
+
+    <script type="text/javascript">setInterval(function (){socketio.emit("retrieve_user_listings");}, 1000)</script>
+    <div class="create_div">
+      <h1 class="header">MY AUCTIONS</h1>
+    </div>
+    <div class="gallery" id="gallery_div_create">
+
+    </div>
+{% endblock %}

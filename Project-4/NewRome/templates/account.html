@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <header class="header">
+      <h1>CREATE AN ACCOUNT</h1>
+    </header>
+    <style>
+        body {
+          background-image: url('https://i.pinimg.com/originals/bb/34/c3/bb34c3b2adc52c0b06b173c35c6b768c.jpg');
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-size: cover;
+        }
+
+        h2 {
+            display: block;
+            font-size: 3em;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: center;
+            color: #FCF8ED;
+            margin-top: 0.67em;
+            margin-bottom: 0.67em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+        label {
+            display: block;
+            font-size: 1.5em;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: center;
+            color: #FCF8ED;
+            margin-top: 0.67em;
+            margin-bottom: 0.67em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        input {
+            border-radius: 25px; /*makes corners rounded*/
+        }
+    </style>
+    <!--    Below is the actual content for the page. Every below the navBar    -->
+    <div class="div_Login">
+            <h2>Register:</h2>
+            <form action="/register" method="post" enctype="application/x-www-form-urlencoded">
+                <label>Username:
+                    <input id="reg_username" class="center" type="text" name="username_reg"/>
+                </label>
+                <br/>
+                <label>Password:&nbsp;
+                    <input id="reg_pass" class="center" type="password" name="password_reg">
+                </label>
+                <input class="center" type="submit" value="Post">
+            </form>
+        </div>
+        <!--    Below is the actual content for the page. Every below the navBar    -->
+        <div class="div_Register">
+            <h2>Login:</h2>
+            <form action="/login" method="post" enctype="application/x-www-form-urlencoded">
+                <label>Username:
+                    <input id="login_username" class="center" type="text" name="username_login"/>
+                </label>
+                <br/>
+                <label>Password:&nbsp;
+                    <input id="login_pass" class="center" type="password" name="password_login">
+                </label>
+                <input class="center" type="submit" value="Post">
+            </form>
+        </div>
+        <!--        GMAIL API STUFF GOES HERE-->
+        <div class="div_Gmail">
+            Insert any of the GMAIL API buttons of whatever below here. Inside this div.
+        </div>
+{% endblock %}
