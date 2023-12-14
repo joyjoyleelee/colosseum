@@ -3,6 +3,12 @@ body {
     padding: 20px;
 }
 
-body .homepage {
-    background-image: url(https://rome.us/wp-content/uploads/Ancient-Roman-Sites-and-Ruins-jpg.webp);
-}
+
+/*General Classes*/
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }

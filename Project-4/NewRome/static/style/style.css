@@ -3,13 +3,25 @@ textarea {
         resize: none;
     }
 
+/*Color pallette*/
+/* 
+cream: #FCF8ED
+gold: #E1C571
+burgundy: #611B1B 
+*/
 
+/*General Classes*/
 
-
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
 
 /* ----------------------------- Modify Classes Below -------------------------- */
 .gallery {
-  background-color: black;
+  /*background-color: #87CCE7;*/
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -18,12 +30,13 @@ textarea {
   gap: 16px;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 20px 10px;
+  padding: 1vmax 0.5vmax;
 }
 
 
 .gallery .listing {
-  background-color: red;
+  background-color: #FCF8ED;
+  text-align: center;
   width: 100%;
   max-width: 350px;
   height: 450px;
@@ -32,7 +45,7 @@ textarea {
 }
 
 .gallery img {
-  background-color: pink;
+  background-color: #E1C571;
   width: 80%;
   max-width: 200px;
   height: 200px;
@@ -41,7 +54,7 @@ textarea {
 }
 
 .gallery input {
-  background-color: white;
+  /*background-color: #E1C571;*/
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -57,6 +70,100 @@ textarea {
 .form-file-btn {
   width:10px;
 }
-. submit-img {
+.submit-img {
   width: 5px;
+}
+/*Header*/
+header {
+  padding: 2vmax;
+  text-align: center;
+  background: #E1C571;
+  color: white;
+  font-size: 2vmax;
+}
+
+/*Dark Button*/
+.dark-btn {
+  cursor: pointer; 
+  background-color: transparent; 
+  height: 2vmax; 
+  width: 1.5vmax; 
+}
+
+/* Navbar container */
+.navbar {
+  overflow: hidden;
+  background-color: #FCF8ED;
+  border-radius: 2vmax; /*makes corners rounded*/
+  font-size: 1.8vmax;
+  font-family:'Times New Roman', Times, serif;
+  padding: 0.1vmax 0.2vmax;
+}
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  font-size: 1.8vmax;
+  color: #611B1B;
+  text-align: center;
+  padding: 1vmax 1.6vmax;
+  text-decoration: none;
+}
+
+.navbar-right {
+  float: right;
+}
+
+/* The dropdown container */
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 1.8vmax;
+  border: none;
+  outline: none;
+  color: #611B1B;
+  padding: 1vmax 1.6vmax;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: #F8DE93;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #611B1B;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  float: none;
+  color: #FCF8ED;
+  padding: 0.8vmax 1.2vmax;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #FCF8ED;
+  color:#611B1B;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
 }

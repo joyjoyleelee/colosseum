@@ -53,7 +53,7 @@ function listing_html(listing_json){
       <h3 class='l-title'>${title}</h3>
       <img class='l-img' src="static/${img}" >
       <p class="l-desc">${desc}</p>
-      <input type="tel" id="bid_${lid}" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
+      <input type="tel" id="bid_${lid}" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
       <button type="button" onclick="place_Bid('${lid}')">Place Bid</button>
       <button type="button">${bid}</button>
       <p>Time Remaining: <button id="time_" type="button">${time}</button> </p>
@@ -113,9 +113,28 @@ socketio.on("display_user_listings", function (listings_json){
   }
 });
 
-function welcome_auctions_won(){
-  /* This function loads as soon as users enter auctions_create.html HTML page.
-  * It automatically initiates the web sockets cals to generate stuff for auctions_create
+function welcome_auctions_list(){
+  /* This function loads as soon as users enter auctions_list.html HTML page.
+  * It automatically initiates the web sockets cals to generate stuff for auctions_list
   */
+  console.log("Welcome to Auctions List")
+  socketio.emit("retrieve_all_listings")
+}
+
+
+function welcome_auctions_won(){
+  /* This function loads as soon as users enter auctions_won.html HTML page.
+  * It automatically initiates the web sockets cals to generate stuff for auctions_won
+  */
+  console.log("Welcome to Auctions Won")
+  socketio.emit("retrieve_won_listings")
+}
+
+function welcome_dark_web(){
+  /* This function loads as soon as users enter dark_web.html HTML page.
+  * It automatically initiates the web sockets cals to generate stuff for dark_web
+  */
+  console.log("Welcome to the Dark Web")
+  socketio.emit("retrieve_won_listings")
 }
 
