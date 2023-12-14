@@ -1,6 +1,7 @@
 import hashlib
 import uuid
 import html
+import time
 
 """
     Database File
@@ -135,7 +136,17 @@ class Database:
     def valid_bid(self,bid_num):
          return bid_num.isnumeric()
 
+    def update_timer(self, bid_id, DB):
+        COLLECTION_LISTINGS = DB["COLLECTION_LISTINGS"]
+        DB_obj = COLLECTION_LISTINGS.find_one({"_id": bid_id})
+        curr_time = DB_obj # Time left in seconds
+        curr_status = DB_obj.get("open") # True or False
+        while True:
 
+            time.sleep(1)
+
+    # {creator: '', creator_token: '', title: '', desc: '', time: '', open: bool, bidders: {}, winner: '', bid: int,
+    #  _id: '', img: '/path/image.format'}
 
 
 

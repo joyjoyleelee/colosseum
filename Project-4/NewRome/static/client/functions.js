@@ -10,7 +10,6 @@
 */
 
 let socketio = io();
-
 function create_listing(){
   /*
     This function reads the inputs that were typed in by the user.
@@ -78,6 +77,7 @@ function place_Bid(lid){
   const list =JSON.stringify( {'iditem': lid,'price': price} )// Individual listing that will be sent to backend server
   socketio.emit("update_bid", list)
 }
+
 
 
 function winner(){

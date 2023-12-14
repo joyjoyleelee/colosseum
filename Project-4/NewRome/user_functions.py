@@ -40,6 +40,7 @@ class User:
         # Authenticates user via token
         pass
 
+
     def is_Authorized(self, user_token):
         # Funtion returns true if user has successfully logged in. Returns false otherwise.
         # This function will be used prior to every path being made.

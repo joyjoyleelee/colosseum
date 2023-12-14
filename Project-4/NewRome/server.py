@@ -1,8 +1,9 @@
+import datetime
 import json
 import os
 from os.path import join, dirname, realpath
 
-from flask import Flask, flash, request, redirect
+from flask import Flask, flash, request, redirect, url_for
 from flask import make_response, render_template, send_from_directory
 from flask_socketio import SocketIO
 from pymongo import MongoClient
@@ -46,7 +47,6 @@ Database.xxx(DB)
 def render_home():
     response = make_response(render_template("index.html"), 200)
     response.headers["X-Content-Type-Options"] = "nosniff"
-    flash('hey')
     return response
 
 # Register and Login User
@@ -56,7 +56,7 @@ def register_user():
     username = request.form['username_reg']
     password = request.form['password_reg']
     user.register(username, password, DB)
-    return redirect("/")
+    return redirect("/account")
 @app.route("/login", methods=["POST"])
 def login_user():
     user = User()
@@ -67,9 +67,15 @@ def login_user():
         response = make_response("Account Doesn't Exist", 404)
         return response
     else:
-        response = make_response(redirect("/"))
+        response = make_response(redirect("/auctions_create"))
         response.set_cookie("auth_token", str(auth_token), max_age=3600, httponly=True)
         return response
+
+@app.route("/account")
+def render_account_info():
+    response = make_response(render_template("account.html"), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
 
 @app.route("/auctions_create")
 def render_auctions_create():
@@ -77,11 +83,29 @@ def render_auctions_create():
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
+@app.route("/auctions_list")
+def render_auctions_list():
+    response = make_response(render_template("auctions_list.html", filename='client_images/default.png'), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+@app.route("/auctions_won")
+def render_auctions_won():
+    response = make_response(render_template("auctions_won.html", filename='client_images/default.png'), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+@app.route("/dark_web")
+def render_dark_web():
+    response = make_response(render_template("dark_web.html", filename='client_images/dark-default.png'), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-@app.route('/listing-img', methods=['GET', 'POST'])
+@app.route('/auctions_create/listing-img', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -100,7 +124,30 @@ def upload_file():
             return render_template('auctions_create.html',filename='client_images/'+filename)
         return "Must submit an image"
 
+@app.route('/auctions_create/listing-create')
+def connect(listing_json):
+    """ This function takes in a JSON format dictionary of the info needed to create the listing.
+        It creates the listing and adds it to the database. Then it emits back to JavaScript
+        So that JavaScript can update all listings
+    """
+    print(f'------------- def connect(listing_json): \n{listing_json} -------------')
+    print('-------------------------------------------------------------------------------------------------')
+    auth_token = request.cookies.get('auth_token', 'Guest')
+    username = Database.get_username(auth_token, DB)
+    Database.add_new_listing(username, auth_token, listing_json, DB)
+    all_listings = Database.retrieve_user_listings(username, DB)
+    return redirect("/auctions_create")
 
+@app.route("/auctions_create/my_listings")
+def history_user():
+    """ This function returns all of the listings created by the specified user.
+        It will be invoked via GET request by the client.
+    """
+    auth_token = request.cookies.get('auth_token', 'Guest')
+    username = Database.get_username(auth_token, DB)
+    all_listings = Database.retrieve_user_listings(username, DB)
+    response = make_response(json.dumps(all_listings), 200)
+    return response
 
 
 # Host All Static Files
@@ -118,20 +165,6 @@ def image_file(file):
 """ 
     --- Web Socket Connections Below ---
 """
-
-@socketio.on("listing-create")
-def connect(listing_json):
-    """ This function takes in a JSON format dictionary of the info needed to create the listing.
-        It creates the listing and adds it to the database. Then it emits back to JavaScript
-        So that JavaScript can update all listings
-    """
-    print(f'def connect(listing_json): \n{listing_json}')
-    auth_token = request.cookies.get('auth_token', 'Guest')
-    username = Database.get_username(auth_token, DB)
-    Database.add_new_listing(username, auth_token, listing_json, DB)
-    all_listings = Database.retrieve_user_listings(username, DB)
-    socketio.emit("display_user_listings", all_listings) # Publish all user listings immediately after creating one
-
 
 @socketio.on("retrieve_user_listings")
 def history_user():
@@ -151,5 +184,18 @@ def up_bid(json_dict):
     print("hi")
     print(pydict)
     Database.update_bid(username,DB,pydict.get('iditem'),pydict.get('price'))
+
+
+@socketio.on("timer")
+def update_timers():
+    """ This function goes through the database and constantly updates the timer remaining on each auction
+        It returns nothing it's intended for functionality, NOT for actual use.
+    """
+    while True:
+        Database.retrieve_all_listings()
+
+@socketio.on('disconnect')
+def test_disconnect():
+    print('Client disconnected')
 
 socketio.run(app=app, host = "0.0.0.0", port = 8080, allow_unsafe_werkzeug=True)
