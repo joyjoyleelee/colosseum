@@ -1,3 +1,4 @@
+import json
 import os
 from os.path import join, dirname, realpath
 
@@ -165,11 +166,15 @@ def history_user():
     all_listings = Database.retrieve_user_listings(username, DB)
     socketio.emit("display_user_listings", all_listings)
 @socketio.on("update_bid")
-def up_bid(bidId,price):
-    if  Database.valid_bid() == True:
-        auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
-        username = Database.get_username(auth_token, DB)
-        Database.update_bid(username,DB,bidId,price)
+def up_bid(json_dict):
+    print("I at least wrote this")
+    # if  Database.valid_bid() == True:
+    auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
+    username = Database.get_username(auth_token, DB)
+    pydict = json.loads(json_dict)
+    print("hi")
+    print(pydict)
+    Database.update_bid(username,DB,pydict.get('iditem'),pydict.get('price'))
 
 
 socketio.run(app=app, host = "0.0.0.0", port = 8080, allow_unsafe_werkzeug=True)

@@ -54,10 +54,10 @@ function listing_html(listing_json){
       <h3 class='l-title'>${title}</h3>
       <img class='l-img' src="static/${img}" >
       <p class="l-desc">${desc}</p>
-      <input type="tel" id="l-urbid" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
-      <button type="button" onclick="place_Bid()">Place Bid</button>
+      <input type="tel" id="bid_${lid}" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
+      <button type="button" onclick="place_Bid('${lid}')">Place Bid</button>
       <button type="button">${bid}</button>
-      <p>Time Remaining: <button type="button">${time}</button> </p>
+      <p>Time Remaining: <button id="time_" type="button">${time}</button> </p>
       <button type="button">Author: <span>${creator}</span></button>
       <p class="createdBy">created by <span class="creator">${creator}</span></p>
     </div>
@@ -71,15 +71,14 @@ function add_listing(){
   const listing_html_new = listing_html()
 }
 
-function place_Bid(){
+function place_Bid(lid){
   /* This function is called when user pushes the Place bid button to enter a new bid value */
-  let bidId  = document.getElementById("listing_${lid}")
-  bidId = bidId.values
-  let price  = document.getElementById("l-urbid")
-  price = price.values
-  const list = {'iditem': bidId,'price': price} // Individual listing that will be sent to backend server
+  let price  = document.getElementById("bid_" + lid)
+  price = price.value
+  const list =JSON.stringify( {'iditem': lid,'price': price} )// Individual listing that will be sent to backend server
   socketio.emit("update_bid", list)
 }
+
 
 function winner(){
 
