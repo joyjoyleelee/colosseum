@@ -20,6 +20,23 @@ burgundy: #611B1B
 }
 
 /* ----------------------------- Modify Classes Below -------------------------- */
+
+.create_menu {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  /*gap: 16px;*/
+  max-width: 1400px;
+  /*margin: 0 auto;*/
+  /*padding: 1vmax 0.5vmax;*/
+  width: 100%;
+  height: 450px;
+  max-height: 500px;
+}
+
+
 .gallery {
   /*background-color: #87CCE7;*/
   display: flex;
@@ -27,7 +44,7 @@ burgundy: #611B1B
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 30px;
   max-width: 1400px;
   margin: 0 auto;
   padding: 1vmax 0.5vmax;
@@ -62,6 +79,35 @@ burgundy: #611B1B
   align-items: center;
 }
 
+
+.gallery .listing {
+  background-color: #FCF8ED;
+  text-align: center;
+  width: 100%;
+  max-width: 350px;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.gallery img {
+  background-color: #E1C571;
+  width: 90%;
+  max-width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.gallery input {
+  /*background-color: #E1C571;*/
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
 .gallery::after {
   content: "";
   width: 350px;
@@ -75,11 +121,11 @@ burgundy: #611B1B
 }
 /*Header*/
 header {
-  padding: 2vmax;
+  padding: 10px 0px 10px 10px;
   text-align: center;
   background: #E1C571;
   color: white;
-  font-size: 2vmax;
+  font-size: 1vmax;
 }
 
 /*Dark Button*/
@@ -166,4 +212,12 @@ header {
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
   display: block;
+}
+
+
+.winner_podium {
+  background-color: #ffc400;
+  color: #000000;
+  border-color: black;
+  margin-bottom: -10px;
 }

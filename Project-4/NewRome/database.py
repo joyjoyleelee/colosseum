@@ -54,6 +54,7 @@ class Database:
                        'desc': desc, 'time': time, 'open': True, 'bidders': {},
                        'winner': '', 'bid': bid, '_id': id, 'img': img}
         COLLECTION_LISTINGS.insert_one(new_listing)
+        self.track_timer(id, DB) # Begin timer for it
         print(f'Database.add_new_listing(self, username, auth_token, listing_json, DB): \n{new_listing}')
 
     def update_listing(self):
@@ -120,30 +121,93 @@ class Database:
         username = DB_obj.get("username", "Guest")
         return username
 
-    def update_bid(self, username, DB, id_list,bid_num):
+    def update_bid(self, username, DB, id_list, bid_num):
         listings = DB["COLLECTION_LISTINGS"]
+        filter = {"_id": id_list}
+        new_bid = int(bid_num)
+        DB_obj = listings.find_one(filter)
+        curr_bid = int(DB_obj.get("bid"))
         # add the user to the dictionary
-        listings.update_one({"_id" :  id_list}, {"$set": {f"bidders.{username}": bid_num }})
-        dict = listings.find_one({"_id" :  id_list}).get("bidders")
-        bidn =  listings.find_one({"_id" :  id_list}).get("bid")
-        #maxbid = max(dict.values())
-        print(bidn)
-        print(bid_num)
-        if bidn < bid_num:
-            print("im higher")
-            maxbid = bid_num
-            listings.update_one({"_id": id_list}, {"$set": {"bid": maxbid}})
-    def valid_bid(self,bid_num):
-         return bid_num.isnumeric()
+        listings.update_one(filter, {"$set": {f"bidders.{username}": bid_num}})
+        if new_bid > curr_bid:
+            listings.update_one({"_id": id_list}, {"$set": {"bid": str(new_bid)}})
 
-    def update_timer(self, bid_id, DB):
+    def get_bid(self, id, DB):
         COLLECTION_LISTINGS = DB["COLLECTION_LISTINGS"]
-        DB_obj = COLLECTION_LISTINGS.find_one({"_id": bid_id})
-        curr_time = DB_obj # Time left in seconds
-        curr_status = DB_obj.get("open") # True or False
-        while True:
+        DB_obj = COLLECTION_LISTINGS.find_one({"_id": id})
+        curr_bid = DB_obj.get("bid")  # Time left in seconds
+        return curr_bid
 
+    def get_time(self, list_id, DB):
+        COLLECTION_LISTINGS = DB["COLLECTION_LISTINGS"]
+        DB_obj = COLLECTION_LISTINGS.find_one({"_id": list_id})
+        curr_time = DB_obj.get("time")  # Time left in seconds
+        return curr_time
+
+    def track_timer(self, listing_id, DB):
+        """ This function sets the timer for each specific listing"""
+        COLLECTION_LISTINGS = DB["COLLECTION_LISTINGS"]
+        filter = {"_id": listing_id}
+        DB_obj = COLLECTION_LISTINGS.find_one({"_id": listing_id})
+        new_time = int(DB_obj.get("time"))
+        while int(new_time) > 0:
+            new_time -= 1
+            COLLECTION_LISTINGS.update_one(filter, {"$set": {"time": str(new_time)}})
             time.sleep(1)
+        # Update winner, etc
+            if int(new_time) == 0:
+                print(True)
+                bidders = DB_obj.get("bidders")
+                w = "" # Winner
+                n = 0 # Highest bid
+                for b in bidders:
+                    val = bidders[b]
+                    if val > n:
+                        n = val
+                        w = b
+                COLLECTION_LISTINGS.update_one(filter, {"$set": {"time": str(0)}})
+                COLLECTION_LISTINGS.update_one(filter, {"$set": {"winner": w}})
+                COLLECTION_LISTINGS.update_one(filter, {"$set": {"open": False}})
+
+
+
+
+
+
+
+    # def update_listing
+    # def update(self, id, DB):
+    #     """ This function updates every timer in the database for all listings."""
+    #     COLLECTION_LISTINGS = DB["COLLECTION_LISTINGS"]
+    #     DB_objs = COLLECTION_LISTINGS.find({})
+    #     for objs in DB_objs:
+    #         # For every listing in the database
+    #         status = objs.get("open")
+    #         t = objs.get("time")
+    #         bidders = objs.get("bidders") # Dictionary of bidders
+    #         winner = objs.get("winner") #
+    #         # Update time
+    #         t -= 0
+    #
+    #         # Update the listing in the Database
+    #
+    #     return
+
+    # def update_timer(self, bid_id, DB):
+    #     COLLECTION_LISTINGS = DB["COLLECTION_LISTINGS"]
+    #     while True:
+    #         DB_obj = COLLECTION_LISTINGS.find_one({"_id": bid_id})
+    #         curr_time = DB_obj.get("time")  # Time left in seconds
+    #         curr_status = DB_obj.get("open")  # True or False
+    #         new_time = curr_time-1
+    #         myquery = {"_id": bid_id} #
+    #         newvalues = {"$set": {"time": new_time}}
+    #         COLLECTION_LISTINGS.update_one(myquery, newvalues)
+    #         if curr_time == 0:
+    #             openvalue = {"$set": {"open": False}}
+    #             COLLECTION_LISTINGS.update_one(myquery, openvalue) # listing is now closed
+    #             break
+    #         time.sleep(1)
 
     # {creator: '', creator_token: '', title: '', desc: '', time: '', open: bool, bidders: {}, winner: '', bid: int,
     #  _id: '', img: '/path/image.format'}

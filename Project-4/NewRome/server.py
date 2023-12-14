@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import time
 from os.path import join, dirname, realpath
 
 from flask import Flask, flash, request, redirect, url_for
@@ -77,37 +78,16 @@ def render_account_info():
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
-@app.route("/auctions_create")
-def render_auctions_create():
-    response = make_response(render_template("auctions_create.html", filename='client_images/default.png'), 200)
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    return response
-
-@app.route("/auctions_list")
-def render_auctions_list():
-    response = make_response(render_template("auctions_list.html", filename='client_images/default.png'), 200)
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    return response
-
-@app.route("/auctions_won")
-def render_auctions_won():
-    response = make_response(render_template("auctions_won.html", filename='client_images/default.png'), 200)
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    return response
-
-@app.route("/dark_web")
-def render_dark_web():
-    response = make_response(render_template("dark_web.html", filename='client_images/dark-default.png'), 200)
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    return response
-
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-@app.route('/auctions_create/listing-img', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
+@app.route("/auctions_create", methods=["GET", "POST"])
+def render_auctions_create():
+    if request.method == "GET":
+        response = make_response(render_template("auctions_create.html", filename='client_images/default.png', creator="Me"), 200)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        return response
+    elif request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
@@ -121,33 +101,37 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template('auctions_create.html',filename='client_images/'+filename)
+            username = Database.get_username(request.cookies.get("auth_token"), DB)
+            return render_template('auctions_create.html',filename='client_images/'+filename, creator=username)
         return "Must submit an image"
 
-@app.route('/auctions_create/listing-create')
-def connect(listing_json):
-    """ This function takes in a JSON format dictionary of the info needed to create the listing.
-        It creates the listing and adds it to the database. Then it emits back to JavaScript
-        So that JavaScript can update all listings
-    """
-    print(f'------------- def connect(listing_json): \n{listing_json} -------------')
-    print('-------------------------------------------------------------------------------------------------')
-    auth_token = request.cookies.get('auth_token', 'Guest')
-    username = Database.get_username(auth_token, DB)
-    Database.add_new_listing(username, auth_token, listing_json, DB)
-    all_listings = Database.retrieve_user_listings(username, DB)
-    return redirect("/auctions_create")
-
-@app.route("/auctions_create/my_listings")
-def history_user():
-    """ This function returns all of the listings created by the specified user.
-        It will be invoked via GET request by the client.
-    """
-    auth_token = request.cookies.get('auth_token', 'Guest')
-    username = Database.get_username(auth_token, DB)
-    all_listings = Database.retrieve_user_listings(username, DB)
-    response = make_response(json.dumps(all_listings), 200)
+@app.route("/auctions_list")
+def render_auctions_list():
+    response = make_response(render_template("auctions_list.html", filename='client_images/default.png'), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
     return response
+
+@app.route("/auctions_won")
+def render_auctions_won():
+    response = make_response(render_template("auctions_won.html", filename='client_images/default.png'), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+""" 
+    --- Easter Eggs ---
+"""
+@app.route("/dark_web")
+def render_dark_web():
+    response = make_response(render_template("dark_web.html", filename='client_images/dark-default.png'), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+@app.route("/light-web")
+def render_light_web():
+    response = make_response(render_template("light_web.html"),200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
 
 
 # Host All Static Files
@@ -166,33 +150,67 @@ def image_file(file):
     --- Web Socket Connections Below ---
 """
 
+@socketio.on('listing-create')
+def connect(listing_json):
+    """ This function takes in a JSON format dictionary of the info needed to create the listing.
+        It creates the listing and adds it to the database. Then it emits back to JavaScript
+        So that JavaScript can update all listings
+    """
+    print(f'------------- def connect(listing_json): \n{listing_json} -------------')
+    print('-------------------------------------------------------------------------------------------------')
+    auth_token = request.cookies.get('auth_token', 'Guest')
+    username = Database.get_username(auth_token, DB)
+    Database.add_new_listing(username, auth_token, listing_json, DB)
+    all_listings = Database.retrieve_user_listings(username, DB)
+    socketio.emit("display_user_listings", all_listings)
+
+@socketio.on("retrieve_won_listings")
+def history_user():
+    # print("Retrieving user history from server")
+    """ This function retrieves and displays all user created listings via Web Sockets"""
+    auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
+    username = Database.get_username(auth_token, DB)
+    all_listings = Database.retrieve_won_listings(username, DB)
+    socketio.emit("display_won_listings", all_listings)
+
+@socketio.on("retrieve_open_listings")
+def history_all():
+    auth_token = request.cookies.get('auth_token', 'Guest')
+    username = Database.get_username(auth_token, DB)
+    open_listings = Database.retrieve_open_listings(DB)
+    socketio.emit("display_open_listings", open_listings)
+
+
 @socketio.on("retrieve_user_listings")
 def history_user():
-    print("Retrieving user history from server")
+    # print("Retrieving user history from server")
     """ This function retrieves and displays all user created listings via Web Sockets"""
     auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
     username = Database.get_username(auth_token, DB)
     all_listings = Database.retrieve_user_listings(username, DB)
     socketio.emit("display_user_listings", all_listings)
+
 @socketio.on("update_bid")
 def up_bid(json_dict):
-    print("I at least wrote this")
     # if  Database.valid_bid() == True:
     auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
     username = Database.get_username(auth_token, DB)
     pydict = json.loads(json_dict)
-    print("hi")
-    print(pydict)
-    Database.update_bid(username,DB,pydict.get('iditem'),pydict.get('price'))
+    Database.update_bid(username, DB, pydict.get('iditem'), pydict.get('price'))
+    id = pydict.get("iditem")
+    new_bid = Database.get_bid(id, DB)
+    data = {'id': id, 'new_bid': new_bid}
+    # socketio.emit("update_bid_client", data)
 
 
-@socketio.on("timer")
-def update_timers():
+@socketio.on("update_listings")
+def retrieve_updates():
     """ This function goes through the database and constantly updates the timer remaining on each auction
         It returns nothing it's intended for functionality, NOT for actual use.
     """
-    while True:
-        Database.retrieve_all_listings()
+    all_listings = Database.retrieve_all_listings(DB)
+    # print(f"This is what I'm updating with:--------------------\n{all_listings}\n---------------")
+    socketio.emit("display_updated_listings", all_listings)
 
 @socketio.on('disconnect')
 def test_disconnect():

@@ -1,14 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Auctions List</title>
-</head>
+{% extends 'base.html' %}
 
-<div class="gallery" id="gallery_div_create" onload="welcome_auctions_list()">
-    
-</div>
-<body>
-
-</body>
-</html>
+{% block content %}
+    <style>
+    body {
+          background-image: url('static/style_images/library.jpg');
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-size: cover;
+        }
+    </style>
+    <script type="text/javascript">socketio.emit("retrieve_open_listings");</script>
+    <script type="text/javascript">setInterval(function (){socketio.emit("update_listings");}, 1);</script>
+    <div class="gallery" id="gallery_div_list">
+    </div>
+{% endblock %}

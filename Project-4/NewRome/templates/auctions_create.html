@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <header class="header">
-      <h1>CREATE A LISTING</h1>
-    </header>
     <style>
         body {
-          background-image: url('https://i.pinimg.com/originals/bb/34/c3/bb34c3b2adc52c0b06b173c35c6b768c.jpg');
+          background-image: url('https://knightstemplar.co/wp-content/uploads/2023/07/Medieval-Blacksmiths.jpg');
           background-repeat: no-repeat;
           background-attachment: fixed;
           background-size: cover;
@@ -16,9 +13,12 @@
             border-radius: 25px; /*makes corners rounded*/
         }
     </style>
-    <div class="gallery" id="gallery_div_create" onload="welcome_auctions_create()">
+    <div class="create_div">
+      <h1 class="header">CREATE A LISTING</h1>
+    </div>
+    <div class="gallery" id=""  >
         <div class="listing">
-            <form action="/listing-img" id="image-form" method="post" enctype="multipart/form-data">
+            <form action="/auctions_create" id="image-form" method="post" enctype="multipart/form-data">
                 <label for="form-file-btn">Select Image: </label>
                 <input id="form-file-btn" class="center" type="file" name="file" accept="image*/">
                 <input id="submit-img" class="center" type="submit" value="Upload Image">
@@ -36,24 +36,36 @@
             </form>
         </div>
         <div class="listing" id="listing_####">
-            <h3>Roman Shield</h3>
-            <img src="/static/client_images/default.png">
-            <p>Description Example: This shield is over 1000 years old. Can you believe it? </p>
+            <h3>Roman Citizen Drip</h3>
+            <img src="/static/style_images/drip.png">
+            <textarea id="l-desc" name="description" rows="4" cols="40" disabled>Interested in the latest Roman fashion for citizens? Please consider purchasing from our store! !Outfits will be sold to the highest bidder!
+            </textarea>
             <input type="tel" id="l-urbid" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
             <button type="button">Place Bid</button>
             <button type="button">0</button>
-            <p>Time Remaining: <button type="button">0</button> </p>
-            <button type="button">Author: <span>MarcoInThisCase</span></button>
+            <p>Time Remaining: <button type="button">???</button></p>
+            <button type="button">Author: <span>Gaius</span></button>
+            <br><span class="winner_podium" hidden>Winner: <span id="l-winner1">${winner}</span></span>
         </div>
-        <div class="listing" id="listing_###">
-            <h3>Roman Shield</h3>
-            <img src="https://www.larpdistribution.com/wp-content/uploads/2020/05/MCI-3312.png">
-            <p>Description Example: This shield is over 1000 years old. Can you believe it? </p>
-            <input type="tel" id="l-urbid2" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
+        <div class="listing" id="listing_####">
+            <h3>Mysterious Book</h3>
+            <img src="/static/style_images/book.jpg">
+            <textarea id="l-desc" name="description" rows="4" cols="40" disabled>We discovered this mysterious book. It reads: "The Book of Life" Shall you enter? Take it from us. It's terrifying. Yet attractive.
+            </textarea>
+            <input type="tel" id="l-urbid" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
             <button type="button">Place Bid</button>
             <button type="button">0</button>
-            <p>Time Remaining: <button type="button">0</button> </p>
-            Author: <span>MarcoInThisCase</span>
+            <p>Time Remaining: <button type="button">?</button> </p>
+            <button type="button">Author: <span>???</span></button>
+            <br><span class="winner_podium" hidden>Winner: <span id="l-winner2">${winner}</span></span>
         </div>
+    </div>
+
+    <script type="text/javascript">setInterval(function (){socketio.emit("retrieve_user_listings");}, 1000)</script>
+    <div class="create_div">
+      <h1 class="header">MY AUCTIONS</h1>
+    </div>
+    <div class="gallery" id="gallery_div_create">
+
     </div>
 {% endblock %}
