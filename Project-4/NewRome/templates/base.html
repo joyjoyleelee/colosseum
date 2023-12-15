@@ -32,11 +32,6 @@
         <a href ="{{ url_for('render_account_info') }}">Logged in as {{ session["username"] }}</a>
       </div>
     </div>
-    <script type="text/javascript">
-        socketio.on("display_error", function (e_msg){
-            alert(e_msg)
-        });
-    </script>
     <div class="content">
         {% block content %} {% endblock %}
     </div>
