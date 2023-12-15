@@ -46,11 +46,11 @@
             <h2>Register:</h2>
             <form action="/register" method="post" enctype="application/x-www-form-urlencoded">
                 <label>Username:
-                    <input id="reg_username" class="center" type="text" name="username_reg"/>
+                    <input id="reg_username" class="center" type="text" name="username_reg" required/>
                 </label>
                 <br/>
                 <label>Password:&nbsp;
-                    <input id="reg_pass" class="center" type="password" name="password_reg">
+                    <input id="reg_pass" class="center" type="password" name="password_reg" required>
                 </label>
                 <input class="center" type="submit" value="Post">
             </form>
@@ -60,11 +60,11 @@
             <h2>Login:</h2>
             <form action="/login" method="post" enctype="application/x-www-form-urlencoded">
                 <label>Username:
-                    <input id="login_username" class="center" type="text" name="username_login"/>
+                    <input id="login_username" class="center" type="text" name="username_login" required/>
                 </label>
                 <br/>
                 <label>Password:&nbsp;
-                    <input id="login_pass" class="center" type="password" name="password_login">
+                    <input id="login_pass" class="center" type="password" name="password_login" required>
                 </label>
                 <input class="center" type="submit" value="Post">
             </form>

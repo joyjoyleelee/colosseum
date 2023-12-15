@@ -55,7 +55,6 @@ class Database:
                        'winner': '', 'bid': bid, '_id': id, 'img': img}
         COLLECTION_LISTINGS.insert_one(new_listing)
         self.track_timer(id, DB) # Begin timer for it
-        print(f'Database.add_new_listing(self, username, auth_token, listing_json, DB): \n{new_listing}')
 
     def update_listing(self):
         """ This function takes in variables to update one specific listing and adds it to the database
@@ -156,7 +155,6 @@ class Database:
             time.sleep(1)
         # Update winner, etc
             if int(new_time) == 0:
-                print(True)
                 bidders = DB_obj.get("bidders")
                 w = "" # Winner
                 n = 0 # Highest bid

@@ -177,17 +177,28 @@ def image_file(file):
 
 @socketio.on('listing-create')
 def connect(listing_json):
+
     """ This function takes in a JSON format dictionary of the info needed to create the listing.
         It creates the listing and adds it to the database. Then it emits back to JavaScript
         So that JavaScript can update all listings
     """
-    print(f'------------- def connect(listing_json): \n{listing_json} -------------')
-    print('-------------------------------------------------------------------------------------------------')
-    auth_token = request.cookies.get('auth_token', 'Guest')
-    username = Database.get_username(auth_token, DB)
-    Database.add_new_listing(username, auth_token, listing_json, DB)
-    all_listings = Database.retrieve_user_listings(username, DB)
-    socketio.emit("display_user_listings", all_listings)
+    # Error Message
+    if not Validate.listing_hasImage(listing_json.get('img')):
+        e_mesg = "400 - Upload your image and submit that first!"
+        socketio.emit("display_error", e_mesg)
+    else:
+        if listing_json.get("bid","").isalpha() or listing_json.get("time").isalpha():
+            # Error Message
+            e_mesg = "400 - Must submit and int or float"
+            socketio.emit("display_error", e_mesg)
+            # Rest of the Code
+        else:
+            # Rest of the Code
+            auth_token = request.cookies.get('auth_token', 'Guest')
+            username = Database.get_username(auth_token, DB)
+            Database.add_new_listing(username, auth_token, listing_json, DB)
+            all_listings = Database.retrieve_user_listings(username, DB)
+            socketio.emit("display_user_listings", all_listings)
 
 @socketio.on("retrieve_won_listings")
 def history_user():
@@ -208,7 +219,6 @@ def history_all():
 
 @socketio.on("retrieve_user_listings")
 def history_user():
-
     # print("Retrieving user history from server")
     """ This function retrieves and displays all user created listings via Web Sockets"""
     auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
@@ -218,14 +228,29 @@ def history_user():
 
 @socketio.on("update_bid")
 def up_bid(json_dict):
+    bid_value = json.loads(json_dict)
+    bid_value = bid_value.get("price")
+    # Error Message
+    if not Validate.bid_isNumber(bid_value):
+        e_mesg = "400 - Must submit and int or float"
+        socketio.emit("display_error", e_mesg)
+    # Rest of the Code
     # if  Database.valid_bid() == True:
     auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
     username = Database.get_username(auth_token, DB)
     pydict = json.loads(json_dict)
-    Database.update_bid(username, DB, pydict.get('iditem'), pydict.get('price'))
-    id = pydict.get("iditem")
-    new_bid = Database.get_bid(id, DB)
-    data = {'id': id, 'new_bid': new_bid}
+    # Check to see if its own bid.
+    DB_obj = DB["COLLECTION_LISTINGS"].find_one({"_id": pydict.get('iditem')})
+    creator = DB_obj.get("creator")
+    if creator == username:
+        e_mesg = "Can't submit on your own bid"
+        socketio.emit("display_error", e_mesg)
+    else:
+        # It's not own bid
+        Database.update_bid(username, DB, pydict.get('iditem'), pydict.get('price'))
+        id = pydict.get("iditem")
+        new_bid = Database.get_bid(id, DB)
+        data = {'id': id, 'new_bid': new_bid}
     # socketio.emit("update_bid_client", data)
 
 
@@ -241,5 +266,59 @@ def retrieve_updates():
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected')
+
+""" ----- Rate Limiting -----"""
+
+
+ip_list = DB["COLLECTION_IP"]
+bans = DB["COLLECTION_BANS"]
+
+# def get_client_ip():
+#     # Check X-Real-IP header first, then fallback to remote_addr
+#     client_ip = request.headers.get('X-Real-IP', request.remote_addr)
+#     print(client_ip)
+#     return f'Client IP Address: {client_ip}'
+
+
+@app.before_request
+def DOS_prevention():
+    # Function verifies that user is allowed to make a request
+    curr_time = time.time()
+    client_ip = request.remote_addr
+    ip_list.insert_one({"ip": client_ip, "time": curr_time})
+    visits = list(ip_list.find({"ip": client_ip}))
+    #TimeLimit is the time tracking the allotted requests
+    timeLimit = 10
+    for i in visits:
+        if curr_time-i["time"]>timeLimit:
+            visits.remove(i)
+            ip_list.delete_one(i)
+    existing = bans.find({"ip": client_ip})
+    for document in existing:
+        if curr_time - document["time"] < 30:
+            response = make_response("You are still banned")
+            response.status_code = 429
+            return response
+        bans.delete_one({"_id": document["_id"]})
+
+    #Limit is the number of requests allowed in 10 seconds
+    limit = 50
+    if len(visits)>limit:
+        bans.insert_one({"ip": client_ip, "time": curr_time})
+        response = make_response("You are still banned")
+        response.status_code = 429
+        return response
+
+
+@app.errorhandler(429)
+def handle_DOS_error(error):
+    return f"Too many requests Refresh After 30 seconds"
+
+
+@app.after_request
+def add_header(response):
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    return response
+
 
 socketio.run(app=app, host = "0.0.0.0", port = 8080, allow_unsafe_werkzeug=True)

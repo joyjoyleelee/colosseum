@@ -16,14 +16,14 @@ class Auth:
         """
         if auth_token == "":
             return False
-        COLLECTION_TOKENS = DB["COLLECTION_TOKENS"]
-        auth_token_h = hashlib.sha256(auth_token.encode()).digest()
-        ret = False
-        COLLECTION_USERS = DB["COLLECTION_USERS"]
-        test = COLLECTION_USERS.find_one({"auth_token":auth_token_h})
-        if test != None:
-            ret = True
-        return ret
+        else:
+            COLLECTION_TOKENS = DB["COLLECTION_TOKENS"]
+            auth_token_h = hashlib.sha256(auth_token.encode()).digest()
+            ret = False
+            test = COLLECTION_TOKENS.find_one({"auth_token": auth_token_h})
+            if test != None:
+                ret = True
+            return ret
 
     # 3
     def listing_isOpen(self, listing_json, DB):
@@ -52,7 +52,9 @@ class Auth:
             It returns False if the entered bid is not a valid input i.e. not a number.
             It returns True if the entered bid is allowed.
         """
-        return isinstance(bid_value,(int, float))
+        if str(bid_value).isalpha():
+            return False
+        return True
 
 
     # 6
@@ -72,17 +74,17 @@ class Auth:
             return True
 
     # 2
-    def listing_hasImage(self, img):
+    def listing_hasImage(self, img: str):
         """ This function takes in the image currently stored in the HTML. It checks whether the user has entered an image.
             It returns False if the user has not entered an image.
             It returns True if the user has entered a valid image.
             This is important because the create listing functionality requires that an image be uploaded FIRST
             and submitted before submitting a listing. This function allows us to enforce that and prevent listing creation
         """
-        if img != "client_images/default.png" and img != None:
-            return True
-        else:
+        if img.__contains__("client_images/default.png") or img == "":
             return False
+        else:
+            return True
 
     # 4
     def listing_isImage(self, img):

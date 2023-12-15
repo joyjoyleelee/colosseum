@@ -20,16 +20,16 @@
         <div class="listing">
             <form action="/auctions_create" id="image-form" method="post" enctype="multipart/form-data">
                 <label for="form-file-btn">Select Image: </label>
-                <input id="form-file-btn" class="center" type="file" name="file" accept="image*/">
+                <input id="form-file-btn" class="center" type="file" name="file" accept="image*/" required>
                 <input id="submit-img" class="center" type="submit" value="Upload Image">
             </form>
             <!--            Bid info form           -->
             <form action="listing-create">
-                <input type="tel" id="l-title" class="center" name="title" placeholder="Enter a title">
+                <input type="text" id="l-title" class="center" name="title" placeholder="Enter a title" required>
                 <img id='img_src' src="{{ url_for('static', filename=filename) }}">
-                <textarea id="l-desc" name="description" rows="4" cols="40" placeholder="Enter description"></textarea>
-                <input type="tel" id="l-bid" class="center" name="bid" placeholder="Enter starting bid" pattern="[0-9]">
-                <input type="tel" id="l-time" class="center" name="time" placeholder="Enter start time in seconds" pattern="[0-9]">
+                <textarea id="l-desc" name="description" rows="4" cols="40" placeholder="Enter description" required></textarea>
+                <input type="number" id="l-bid" class="center" name="bid" placeholder="Enter starting bid" pattern="[0-9]">
+                <input type="number" id="l-time" class="center" name="time" placeholder="Enter start time in seconds" pattern="[0-9]" min="1">
                 created by <span>MeMario</span>
                 </br>
                 <button type="button" id="create-listing-btn" onclick="create_listing()"> Create Listing</button>
@@ -41,7 +41,7 @@
             <textarea id="l-desc" name="description" rows="4" cols="40" disabled>Interested in the latest Roman fashion for citizens? Please consider purchasing from our store! !Outfits will be sold to the highest bidder!
             </textarea>
             <input type="tel" id="l-urbid" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
-            <button type="button">Place Bid</button>
+            <a href="https://www.amazon.com/EAWIN-Deluxe-Classic-Costume-Including/dp/B0B7BYKVMV/ref=sr_1_13?crid=Q45TKC40EFOY&keywords=roman%2Bcitizen%2Btoga&qid=1702618865&sprefix=roman%2Bcitizen%2Btoga%2Caps%2C94&sr=8-13&th=1"><button type="button">Place Bid</button></a>
             <button type="button">0</button>
             <p>Time Remaining: <button type="button">???</button></p>
             <button type="button">Author: <span>Gaius</span></button>
@@ -53,9 +53,9 @@
             <textarea id="l-desc" name="description" rows="4" cols="40" disabled>We discovered this mysterious book. It reads: "The Book of Life" Shall you enter? Take it from us. It's terrifying. Yet attractive.
             </textarea>
             <input type="tel" id="l-urbid" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
-            <button type="button">Place Bid</button>
+            <a href="{{ url_for('render_light_web') }}"><button type="button">Place Bid</button></a>
             <button type="button">0</button>
-            <p>Time Remaining: <button type="button">?</button> </p>
+            <p>Time Remaining: <button type="button">?</button></p>
             <button type="button">Author: <span>???</span></button>
             <br><span class="winner_podium" hidden>Winner: <span id="l-winner2">${winner}</span></span>
         </div>

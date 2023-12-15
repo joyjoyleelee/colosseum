@@ -52,7 +52,7 @@ function listing_html(listing_json){
       <h3 class='l-title' id="title_${lid}">${title}</h3>
       <img class='l-img' id="img_${lid}" src="static/${img}" >
       <textarea id="desc_${lid}" name="description" rows="4" cols="40" disabled>${desc}</textarea>
-      <input type="tel" id="bid_${lid}" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
+      <input type="number" id="bid_${lid}" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
       <button type="button" id="place_bid_${lid}" onclick="place_Bid('${lid}')">Place Bid</button>
       <button type="button" id="bid_display_${lid}">${bid}</button>
       <p>Time Remaining: <button id="time_${lid}" type="button">${time}</button> </p>
@@ -84,7 +84,7 @@ function listing_html_m(listing_json){
       <h3 class='l-title' id="title_m${lid}">${title}</h3>
       <img class='l-img' id="img_m${lid}" src="static/${img}" >
       <textarea id="desc_m${lid}" name="description" rows="4" cols="40" disabled>${desc}</textarea>
-      <input type="tel" id="bid_m${lid}" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
+      <input type="number" id="bid_m${lid}" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]" disabled>
       <button type="button" id="place_bid_m${lid}">Place Bid</button>
       <button type="button" id="bid_display_m${lid}">${bid}</button>
       <p>Time Remaining: <button id="time_m${lid}" type="button">${time}</button> </p>
@@ -116,7 +116,7 @@ function listing_html_w(listing_json){
       <h3 class='l-title' id="title_w${lid}">${title}</h3>
       <img class='l-img' id="img_w${lid}" src="static/${img}" >
       <textarea id="desc_w${lid}" name="description" rows="4" cols="40" disabled>${desc}</textarea>
-      <input type="tel" id="bid_w${lid}" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
+      <input type="tel" id="bid_w${lid}" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]" disabled>
       <button type="button" id="place_bid_w${lid}">Place Bid</button>
       <button type="button" id="bid_display_w${lid}">${bid}</button>
       <p>Time Remaining: <button id="time_w${lid}" type="button">${time}</button> </p>
