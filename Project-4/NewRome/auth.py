@@ -1,3 +1,4 @@
+import hashlib
 from datetime import datetime
 
 """
@@ -13,9 +14,13 @@ class Auth:
             It returns False if the user cannot be authenticated. e.g. No auth token or not a recognized user.
             It returns True if the user is authenticated.
         """
+        if auth_token == "":
+            return False
+        COLLECTION_TOKENS = DB["COLLECTION_TOKENS"]
+        auth_token_h = hashlib.sha256(auth_token.encode()).digest()
         ret = False
         COLLECTION_USERS = DB["COLLECTION_USERS"]
-        test = COLLECTION_USERS.find_one({"auth_token":auth_token})
+        test = COLLECTION_USERS.find_one({"auth_token":auth_token_h})
         if test != None:
             ret = True
         return ret

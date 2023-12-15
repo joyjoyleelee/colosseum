@@ -11,16 +11,16 @@
 <body>
     <!--    NAV BAR     -->
     <div class="navbar">
-      <a href="http://127.0.0.1:8080/">Home</a>
+      <a href="{{ url_for('render_home') }}">Home</a>
       <div class="dropdown">
         <button class="dropbtn">Auctions
           <i class="fa fa-caret-down"></i>
         </button>
         <div class="dropdown-content">
           <!--    UPDATE LINKS FOR DEPLOYMENT     -->
-          <a href="http://127.0.0.1:8080/auctions_create">Auctions Create</a>
-          <a href="http://127.0.0.1:8080/auctions_list">Auctions Market</a>
-          <a href="http://127.0.0.1:8080/auctions_won">Auctions Won</a>
+          <a href="{{ url_for('render_auctions_create') }}">Auctions Create</a>
+          <a href="{{ url_for('render_auctions_list') }}">Auctions Market</a>
+          <a href="{{ url_for('render_auctions_won') }}">Auctions Won</a>
         </div>
       </div>
       <!--AUDIO-->
@@ -29,8 +29,8 @@
       Your browser does not support the audio element.
       </audio>
       <div class="navbar-right">
-        <a href="http://127.0.0.1:8080/dark_web"></a>
-        <a href ="http://127.0.0.1:8080/account">Logged in as {{display_name}}</a>
+        <a href="{{ url_for('render_dark_web') }}"></a>
+        <a href ="{{ url_for('render_account_info') }}">Logged in as {{ session["username"] }}</a>
       </div>
     </div>
     <div class="content">

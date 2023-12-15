@@ -144,10 +144,10 @@ function update_listing(listing_json){
   elem_time.innerHTML = new_time;
   elem_bid.innerHTML = new_bid;
   // Update the styling
-  if (parseInt(new_time) === 0) {
+  if (winner != "") {
     elem_time.style.color = "red";
-    const elem_winner = document.getElementById(`winner_${id}`)
-    elem_winner.removeAttribute("hidden")
+    const elem_winner = document.getElementById(`winner_${id}`);
+    elem_winner.removeAttribute("hidden");
   }
 }
 

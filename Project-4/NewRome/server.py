@@ -4,18 +4,20 @@ import os
 import time
 from os.path import join, dirname, realpath
 
-from flask import Flask, flash, request, redirect, url_for
+from flask import Flask, flash, request, redirect, url_for, session
 from flask import make_response, render_template, send_from_directory
 from flask_socketio import SocketIO
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
+
+
 
 UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/client_images')
 
 # My Imports
 from database import Database
 from user_functions import User
-
+from auth import Auth
 
 
 app = Flask(__name__)
@@ -23,6 +25,7 @@ UPLOAD_FOLDER =UPLOADS_PATH
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'jfif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config["SECRET_KEY"] = "Marco_is_always_the_key"
+
 socketio = SocketIO(app)
 """
         --  Establish the mongo database --
@@ -43,6 +46,7 @@ DB = mongo_client["NewRome"]
 Database = Database() # Database Object I create for functionality
 
 Database.xxx(DB)
+Validate = Auth()
 
 @app.route("/") #index.html
 def render_home():
@@ -70,6 +74,7 @@ def login_user():
     else:
         response = make_response(redirect("/auctions_create"))
         response.set_cookie("auth_token", str(auth_token), max_age=3600, httponly=True)
+        session["username"] = Database.get_username(auth_token, DB) #
         return response
 
 @app.route("/account")
@@ -83,6 +88,10 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 @app.route("/auctions_create", methods=["GET", "POST"])
 def render_auctions_create():
+    # Validate user token
+    if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
+        return make_response(redirect("/account"), 401)
+    # User's not logged in
     if request.method == "GET":
         response = make_response(render_template("auctions_create.html", filename='client_images/default.png', creator="Me"), 200)
         response.headers["X-Content-Type-Options"] = "nosniff"
@@ -107,12 +116,20 @@ def render_auctions_create():
 
 @app.route("/auctions_list")
 def render_auctions_list():
+    # Validate user token
+    if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
+        return make_response(redirect("/account"), 401)
+    # User's not logged in
     response = make_response(render_template("auctions_list.html", filename='client_images/default.png'), 200)
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
 @app.route("/auctions_won")
 def render_auctions_won():
+    # Validate user token
+    if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
+        return make_response(redirect("/account"), 401)
+    # User's not logged in
     response = make_response(render_template("auctions_won.html", filename='client_images/default.png'), 200)
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
@@ -122,12 +139,20 @@ def render_auctions_won():
 """
 @app.route("/dark_web")
 def render_dark_web():
+    # Validate user token
+    if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
+        return make_response(redirect("/account"), 401)
+    # User's not logged in
     response = make_response(render_template("dark_web.html", filename='client_images/dark-default.png'), 200)
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
 @app.route("/light-web")
 def render_light_web():
+    # Validate user token
+    if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
+        return make_response(redirect("/account"), 401)
+    # User's not logged in
     response = make_response(render_template("light_web.html"),200)
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
@@ -183,6 +208,7 @@ def history_all():
 
 @socketio.on("retrieve_user_listings")
 def history_user():
+
     # print("Retrieving user history from server")
     """ This function retrieves and displays all user created listings via Web Sockets"""
     auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
