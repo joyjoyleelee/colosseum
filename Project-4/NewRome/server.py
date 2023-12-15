@@ -38,7 +38,7 @@ socketio = SocketIO(app)
         {creator: , creator_token: , time_remaining: , open: true, bidders: [], winner: , bid: 0}
 """
 
-mongo_client = MongoClient("localhost")
+mongo_client = MongoClient("mongo")
 DB = mongo_client["NewRome"]
 Database = Database() # Database Object I create for functionality
 
