@@ -13,26 +13,26 @@
             border-radius: 25px; /*makes corners rounded*/
         }
     </style>
-    <div class="create_div">
-      <h1 class="header">CREATE A LISTING</h1>
-    </div>
+    <header class="header">
+        <h1>CREATE A LISTING</h1>
+    </header>
     <div class="gallery" id=""  >
         <div class="listing">
-            <form action="/auctions_create" id="image-form" method="post" enctype="multipart/form-data">
+            <form action="/auctions_create/{{ page_id }}" id="image-form" method="post" enctype="multipart/form-data">
                 <label for="form-file-btn">Select Image: </label>
                 <input id="form-file-btn" class="center" type="file" name="file" accept="image*/" required>
                 <input id="submit-img" class="center" type="submit" value="Upload Image">
             </form>
             <!--            Bid info form           -->
             <form action="listing-create">
-                <input type="text" id="l-title" class="center" name="title" placeholder="Enter a title" required>
-                <img id='img_src' src="{{ url_for('static', filename=filename) }}">
-                <textarea id="l-desc" name="description" rows="4" cols="40" placeholder="Enter description" required></textarea>
-                <input type="number" id="l-bid" class="center" name="bid" placeholder="Enter starting bid" pattern="[0-9]">
-                <input type="number" id="l-time" class="center" name="time" placeholder="Enter start time in seconds" pattern="[0-9]" min="1">
+                <input type="text" id="l-title_{{ page_id }}" class="center" name="title" placeholder="Enter a title" required>
+                <img id='img_src_{{ page_id }}' src="{{ url_for('static', filename=filename) }}">
+                <textarea id="l-desc_{{ page_id }}" name="description" rows="4" cols="40" placeholder="Enter description" required></textarea>
+                <input type="number" id="l-bid_{{ page_id }}" class="center" name="bid" placeholder="Enter starting bid" pattern="[0-9]">
+                <input type="number" id="l-time_{{ page_id }}" class="center" name="time" placeholder="Enter start time in seconds" pattern="[0-9]" min="1">
                 created by <span>MeMario</span>
                 </br>
-                <button type="button" id="create-listing-btn" onclick="create_listing()"> Create Listing</button>
+                <button type="button" id="create-listing-btn_{{ page_id }}" onclick="create_listing('{{ page_id }}')"> Create Listing</button>
             </form>
         </div>
         <div class="listing" id="listing_####">
@@ -62,10 +62,9 @@
     </div>
 
     <script type="text/javascript">setInterval(function (){socketio.emit("retrieve_user_listings");}, 1000)</script>
-    <div class="create_div">
-      <h1 class="header">MY AUCTIONS</h1>
-    </div>
-    <div class="gallery" id="gallery_div_create">
-
+    <header class="header">
+        <h1>MY LISTINGS</h1>
+    </header>
+    <div class="gallery" id="gallery_div_{{ page_id }}">
     </div>
 {% endblock %}

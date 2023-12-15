@@ -17,9 +17,9 @@
         </button>
         <div class="dropdown-content">
           <!--    UPDATE LINKS FOR DEPLOYMENT     -->
-          <a href="{{ url_for('render_auctions_create') }}">Auctions Create</a>
+          <a href="/auctions_create/{{ page_id }}">Auctions Create</a>
           <a href="{{ url_for('render_auctions_list') }}">Auctions Market</a>
-          <a href="{{ url_for('render_auctions_won') }}">Auctions Won</a>
+          <a href="/auctions_won/{{ page_id }}">Auctions Won</a>
         </div>
       </div>
       <!--AUDIO-->

@@ -4,7 +4,7 @@
 <head>
     <style>
         body {
-          background-image: url('/static/client_images/dark-background.png');
+          background-image: url('/static/style_images/dark-background.png');
           background-repeat: no-repeat;
           background-attachment: fixed;
           background-size: cover;
@@ -26,40 +26,40 @@
 </head>
 <body>
     <h1>WELCOME TO THE DARK WEB</h1>
-    <div class="gallery" id="gallery_div_create" onload="welcome_auctions_create()">
+    <div class="gallery" onload="welcome_auctions_create()">
         <div class="listing">
             <div>
                 <label for="form-file-btn">Select Image: </label>
-                <input id="form-file-btn" class="center" type="file" name="file" accept="image*/">
-                <input id="submit-img" class="center" type="submit" value="Upload Image">
+                <input class="center" type="file" name="file" accept="image*/">
+                <input class="center" type="submit" value="Upload Image">
             </div>
             <!--            Bid info form           -->
             <div>
-                <input type="tel" id="l-title" class="center" name="title" placeholder="Enter a title">
-                <img id='img_src' src="{{ url_for('static', filename=filename) }}">
-                <textarea id="l-desc" name="description" rows="4" cols="40" placeholder="Enter description"></textarea>
-                <input type="tel" id="l-bid" class="center" name="bid" placeholder="Enter starting bid" pattern="[0-9]">
-                <input type="tel" id="l-time" class="center" name="time" placeholder="Enter start time in seconds" pattern="[0-9]">
+                <input type="tel" class="center" name="title" placeholder="Enter a title">
+                <img src="{{ url_for('static', filename=filename) }}">
+                <textarea name="description" rows="4" cols="40" placeholder="Enter description"></textarea>
+                <input type="tel" class="center" name="bid" placeholder="Enter starting bid" pattern="[0-9]">
+                <input type="tel" class="center" name="time" placeholder="Enter start time in seconds" pattern="[0-9]">
                 created by <span>MeMario</span>
                 </br>
-                <button type="button" id="create-listing-btn" onclick="alert('Ayo! Arrest him!')"> Create Listing</button>
+                <button type="button" onclick="alert('Ayo! Arrest him!')"> Create Listing</button>
             </div>
         </div>
-        <div class="listing" id="listing_####">
+        <div class="listing">
             <h3>Roman Cross</h3>
             <img src="https://images.squarespace-cdn.com/content/v1/5dc2d01ec85d300c468b6311/1617283434758-DQAJFFP40ZQH7VZ1MCMI/unsplash-image-7oJ3O6pk10s.jpg?format=1500w">
             <p>A cross. Useful tool for wonderful display of nice things.</p>
-            <input type="tel" id="l-urbid" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
+            <input type="tel" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
             <button type="button" onclick="alert('Only one man conquered it.')">Place Bid</button>
             <button type="button">0</button>
             <p>Time Remaining: <button type="button">0</button> </p>
-            <button type="button">Author: <span>Roman Army</span></button>
+            <button type="button">Author: <span>Pontius Pilate</span></button>
         </div>
-        <div class="listing" id="listing_###">
+        <div class="listing">
             <h3>Servant</h3>
             <img src="https://hicoop.b-cdn.net/wp-content/uploads/2023/06/roman-slave.png">
             <p>SERVANT. NOT A SLAVE. We do not support the use of slavery here.</p>
-            <input type="number" id="l-urbid2" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
+            <input type="number" class="center" name="urbid" placeholder="Enter a bid" pattern="[0-9]">
             <button type="button" onclick="alert('We do not support the purchase of slavery')">Place Bid</button>
             <button type="button">0</button>
             <p>Time Remaining: <button type="button">0</button> </p>

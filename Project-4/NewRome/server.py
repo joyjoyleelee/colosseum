@@ -72,47 +72,25 @@ def login_user():
         response = make_response("Account Doesn't Exist", 404)
         return response
     else:
-        response = make_response(redirect("/auctions_create"))
+        response = make_response(redirect(f"/auctions_create/{username}"))
         response.set_cookie("auth_token", str(auth_token), max_age=3600, httponly=True)
         session["username"] = Database.get_username(auth_token, DB) #
         return response
 
 @app.route("/account")
 def render_account_info():
-    response = make_response(render_template("account.html"), 200)
+    response = make_response(render_template("account.html", page_id=session.get("username","")), 200)
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
+
+@app.route("/auctions_create")
+def redirect_auctions_create():
+    username = session.get('username', '')
+    return redirect(f"/auctions_create/{username}")
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-@app.route("/auctions_create", methods=["GET", "POST"])
-def render_auctions_create():
-    # Validate user token
-    if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
-        return make_response(redirect("/account"), 401)
-    # User's not logged in
-    if request.method == "GET":
-        response = make_response(render_template("auctions_create.html", filename='client_images/default.png', creator="Me"), 200)
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        return response
-    elif request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return "Missing Image"
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return "Missing Image"
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            username = Database.get_username(request.cookies.get("auth_token"), DB)
-            return render_template('auctions_create.html',filename='client_images/'+filename, creator=username)
-        return "Must submit an image"
 
 @app.route("/auctions_list")
 def render_auctions_list():
@@ -120,19 +98,11 @@ def render_auctions_list():
     if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
         return make_response(redirect("/account"), 401)
     # User's not logged in
-    response = make_response(render_template("auctions_list.html", filename='client_images/default.png'), 200)
+    response = make_response(render_template("auctions_list.html"), 200)
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
-@app.route("/auctions_won")
-def render_auctions_won():
-    # Validate user token
-    if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
-        return make_response(redirect("/account"), 401)
-    # User's not logged in
-    response = make_response(render_template("auctions_won.html", filename='client_images/default.png'), 200)
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    return response
+
 
 """ 
     --- Easter Eggs ---
@@ -143,7 +113,7 @@ def render_dark_web():
     if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
         return make_response(redirect("/account"), 401)
     # User's not logged in
-    response = make_response(render_template("dark_web.html", filename='client_images/dark-default.png'), 200)
+    response = make_response(render_template("dark_web.html", filename='style_images/dark-default.png', page_id=session["username"]), 200)
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
@@ -153,7 +123,7 @@ def render_light_web():
     if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
         return make_response(redirect("/account"), 401)
     # User's not logged in
-    response = make_response(render_template("light_web.html"),200)
+    response = make_response(render_template("light_web.html", page_id=session["username"]),200)
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
@@ -197,8 +167,9 @@ def connect(listing_json):
             auth_token = request.cookies.get('auth_token', 'Guest')
             username = Database.get_username(auth_token, DB)
             Database.add_new_listing(username, auth_token, listing_json, DB)
-            all_listings = Database.retrieve_user_listings(username, DB)
-            socketio.emit("display_user_listings", all_listings)
+            all_listings = Database.retrieve_open_listings(DB)
+            socketio.emit("display_open_listings", all_listings)
+
 
 @socketio.on("retrieve_won_listings")
 def history_user():
@@ -207,7 +178,7 @@ def history_user():
     auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
     username = Database.get_username(auth_token, DB)
     all_listings = Database.retrieve_won_listings(username, DB)
-    socketio.emit("display_won_listings", all_listings)
+    socketio.emit("display_won_listings", [all_listings, username])
 
 @socketio.on("retrieve_open_listings")
 def history_all():
@@ -224,7 +195,7 @@ def history_user():
     auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
     username = Database.get_username(auth_token, DB)
     all_listings = Database.retrieve_user_listings(username, DB)
-    socketio.emit("display_user_listings", all_listings)
+    socketio.emit("display_user_listings", [all_listings, username])
 
 @socketio.on("update_bid")
 def up_bid(json_dict):
@@ -320,5 +291,40 @@ def add_header(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     return response
 
+"""
+    --- Awesome New Idea --- 
+"""
+@app.route("/auctions_create/<username>", methods=["GET", "POST"])
+def render_auctions_create(username):
+    # Validate user token
+    if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
+        return make_response(redirect("/account"), 401)
+    # User's not logged in
+    if request.method == "GET":
+        return make_response(render_template("page.html", page_id=username, filename='client_images/default.png'))
+    elif request.method == "POST":
+        if 'file' not in request.files:
+            return "Missing Image"
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            return "Missing Image"
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            username = Database.get_username(request.cookies.get("auth_token"), DB)
+            return render_template('page.html',page_id=username, filename='client_images/'+filename)
+        return "Must submit an image"
+
+@app.route("/auctions_won/<username>")
+def render_auctions_won(username):
+    # Validate user token
+    if not Validate.user_isAuthorized(request.cookies.get("auth_token", ""), DB):
+        return make_response(redirect("/account"), 401)
+    # User's not logged in
+    response = make_response(render_template("auctions_won.html", page_id=username), 200)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
 
 socketio.run(app=app, host = "0.0.0.0", port = 8080, allow_unsafe_werkzeug=True)
