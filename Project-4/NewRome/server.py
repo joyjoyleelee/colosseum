@@ -164,38 +164,42 @@ def connect(listing_json):
             # Rest of the Code
         else:
             # Rest of the Code
-            auth_token = request.cookies.get('auth_token', 'Guest')
-            username = Database.get_username(auth_token, DB)
-            Database.add_new_listing(username, auth_token, listing_json, DB)
-            all_listings = Database.retrieve_open_listings(DB)
-            socketio.emit("display_open_listings", all_listings)
+            auth_token = request.cookies.get('auth_token', '')
+            if auth_token != "":
+                username = Database.get_username(auth_token, DB)
+                Database.add_new_listing(username, auth_token, listing_json, DB)
+                all_listings = Database.retrieve_open_listings(DB)
+                socketio.emit("display_open_listings", all_listings)
 
 
 @socketio.on("retrieve_won_listings")
 def history_user():
     # print("Retrieving user history from server")
     """ This function retrieves and displays all user created listings via Web Sockets"""
-    auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
-    username = Database.get_username(auth_token, DB)
-    all_listings = Database.retrieve_won_listings(username, DB)
-    socketio.emit("display_won_listings", [all_listings, username])
+    auth_token = auth_token = request.cookies.get('auth_token', '')
+    if auth_token != "":
+        username = Database.get_username(auth_token, DB)
+        all_listings = Database.retrieve_won_listings(username, DB)
+        socketio.emit("display_won_listings", [all_listings, username])
 
 @socketio.on("retrieve_open_listings")
 def history_all():
-    auth_token = request.cookies.get('auth_token', 'Guest')
-    username = Database.get_username(auth_token, DB)
-    open_listings = Database.retrieve_open_listings(DB)
-    socketio.emit("display_open_listings", open_listings)
+    auth_token = request.cookies.get('auth_token', '')
+    if auth_token != "":
+        username = Database.get_username(auth_token, DB)
+        open_listings = Database.retrieve_open_listings(DB)
+        socketio.emit("display_open_listings", open_listings)
 
 
 @socketio.on("retrieve_user_listings")
 def history_user():
     # print("Retrieving user history from server")
     """ This function retrieves and displays all user created listings via Web Sockets"""
-    auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
-    username = Database.get_username(auth_token, DB)
-    all_listings = Database.retrieve_user_listings(username, DB)
-    socketio.emit("display_user_listings", [all_listings, username])
+    auth_token = auth_token = request.cookies.get('auth_token', '')
+    if auth_token != "":
+        username = Database.get_username(auth_token, DB)
+        all_listings = Database.retrieve_user_listings(username, DB)
+        socketio.emit("display_user_listings", [all_listings, username])
 
 @socketio.on("update_bid")
 def up_bid(json_dict):
@@ -207,21 +211,22 @@ def up_bid(json_dict):
         socketio.emit("display_error", e_mesg)
     # Rest of the Code
     # if  Database.valid_bid() == True:
-    auth_token = auth_token = request.cookies.get('auth_token', 'Guest')
-    username = Database.get_username(auth_token, DB)
-    pydict = json.loads(json_dict)
-    # Check to see if its own bid.
-    DB_obj = DB["COLLECTION_LISTINGS"].find_one({"_id": pydict.get('iditem')})
-    creator = DB_obj.get("creator")
-    if creator == username:
-        e_mesg = "Can't submit on your own bid"
-        socketio.emit("display_error", e_mesg)
-    else:
-        # It's not own bid
-        Database.update_bid(username, DB, pydict.get('iditem'), pydict.get('price'))
-        id = pydict.get("iditem")
-        new_bid = Database.get_bid(id, DB)
-        data = {'id': id, 'new_bid': new_bid}
+    auth_token = auth_token = request.cookies.get('auth_token', '')
+    if auth_token != "":
+        username = Database.get_username(auth_token, DB)
+        pydict = json.loads(json_dict)
+        # Check to see if its own bid.
+        DB_obj = DB["COLLECTION_LISTINGS"].find_one({"_id": pydict.get('iditem')})
+        creator = DB_obj.get("creator")
+        if creator == username:
+            e_mesg = "Can't submit on your own bid"
+            socketio.emit("display_error", e_mesg)
+        else:
+            # It's not own bid
+            Database.update_bid(username, DB, pydict.get('iditem'), pydict.get('price'))
+            id = pydict.get("iditem")
+            new_bid = Database.get_bid(id, DB)
+            data = {'id': id, 'new_bid': new_bid}
     # socketio.emit("update_bid_client", data)
 
 
@@ -250,12 +255,22 @@ bans = DB["COLLECTION_BANS"]
 #     print(client_ip)
 #     return f'Client IP Address: {client_ip}'
 
+def get_real_ip():
+    # Check if the X-Forwarded-For header is present
+    if 'X-Forwarded-For' in request.headers:
+        # Get the first IP address from the list (the real client IP)
+        ip = request.headers['X-Forwarded-For'].split(',')[0].strip()
+    else:
+        # If X-Forwarded-For is not present, fallback to request.remote_addr
+        ip = request.remote_addr
+    return ip
 
 @app.before_request
 def DOS_prevention():
     # Function verifies that user is allowed to make a request
     curr_time = time.time()
-    client_ip = request.remote_addr
+    client_ip = get_real_ip()
+    print(client_ip)
     ip_list.insert_one({"ip": client_ip, "time": curr_time})
     visits = list(ip_list.find({"ip": client_ip}))
     #TimeLimit is the time tracking the allotted requests
@@ -279,7 +294,6 @@ def DOS_prevention():
         response = make_response("You are still banned")
         response.status_code = 429
         return response
-
 
 @app.errorhandler(429)
 def handle_DOS_error(error):
