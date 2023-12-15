@@ -6,7 +6,7 @@
     <title>Login and Register</title>
     <style>
         body {
-            background-image: url("/static/client_images/welcome-column.png");
+            background-image: url("/style_images/welcome-column.png");
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: cover;
@@ -55,7 +55,7 @@
             }
     
             .enter-btn {
-                background-color: #4caf50;
+                background-color: #611B1B;
                 color: #fff;
                 border: none;
                 text-decoration: none;
@@ -66,7 +66,7 @@
     <body>
     
     <!-- Directly link to the create auctions page -->
-    <a href="/auctions_create" class="btn enter-btn">Enter the Empire</a>
+    <a href="{{ url_for("render_account_info") }}" class="btn enter-btn">Enter the Empire</a>
     
     </body>
 </html>

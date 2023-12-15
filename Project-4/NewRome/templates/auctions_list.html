@@ -1,7 +1,44 @@
-{% extends 'base.html' %}
-
-{% block content %}
-    <style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NewRome</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="{{url_for('static', filename='client/functions.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style/style.css')}}"/>
+</head>
+<body>
+    <!--    NAV BAR     -->
+    <div class="navbar">
+      <a href="{{ url_for('render_home') }}">Home</a>
+      <div class="dropdown">
+        <button class="dropbtn">Auctions
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+          <!--    UPDATE LINKS FOR DEPLOYMENT     -->
+          <a href="/auctions_create/{{ session['username'] }}">Auctions Create</a>
+          <a href="{{ url_for('render_auctions_list') }}">Auctions Market</a>
+          <a href="/auctions_won/{{ session['username'] }}">Auctions Won</a>
+        </div>
+      </div>
+      <!--AUDIO-->
+      <audio controls autoplay loop>
+        <source src="/static/client_audio/journey.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+      </audio>
+      <div class="navbar-right">
+        <a href="{{ url_for('render_dark_web') }}"></a>
+        <a href ="{{ url_for('render_account_info') }}">Logged in as {{ session["username"] }}</a>
+      </div>
+    </div>
+    <script type="text/javascript">
+        socketio.on("display_error", function (e_msg){
+            alert(e_msg)
+        });
+    </script>
+    <div class="content">
+        <style>
     body {
           background-image: url('static/style_images/library.jpg');
           background-repeat: no-repeat;
@@ -10,7 +47,9 @@
         }
     </style>
     <script type="text/javascript">socketio.emit("retrieve_open_listings");</script>
-    <script type="text/javascript">setInterval(function (){socketio.emit("update_listings");}, 1);</script>
+    <script type="text/javascript">setInterval(function (){socketio.emit("update_listings");}, 1000);</script>
     <div class="gallery" id="gallery_div_list">
     </div>
-{% endblock %}
+    </div>
+</body>
+</html>

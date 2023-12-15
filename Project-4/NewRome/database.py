@@ -54,8 +54,8 @@ class Database:
                        'desc': desc, 'time': time, 'open': True, 'bidders': {},
                        'winner': '', 'bid': bid, '_id': id, 'img': img}
         COLLECTION_LISTINGS.insert_one(new_listing)
+        # print(f"New Listing: {new_listing}")
         self.track_timer(id, DB) # Begin timer for it
-        print(f'Database.add_new_listing(self, username, auth_token, listing_json, DB): \n{new_listing}')
 
     def update_listing(self):
         """ This function takes in variables to update one specific listing and adds it to the database
@@ -155,19 +155,19 @@ class Database:
             COLLECTION_LISTINGS.update_one(filter, {"$set": {"time": str(new_time)}})
             time.sleep(1)
         # Update winner, etc
-            if int(new_time) == 0:
-                print(True)
-                bidders = DB_obj.get("bidders")
-                w = "" # Winner
-                n = 0 # Highest bid
-                for b in bidders:
-                    val = bidders[b]
-                    if val > n:
-                        n = val
-                        w = b
-                COLLECTION_LISTINGS.update_one(filter, {"$set": {"time": str(0)}})
-                COLLECTION_LISTINGS.update_one(filter, {"$set": {"winner": w}})
-                COLLECTION_LISTINGS.update_one(filter, {"$set": {"open": False}})
+        # print(f"--Update Winner--")
+        DB_obj_new = COLLECTION_LISTINGS.find_one(filter)
+        bidders = DB_obj_new.get("bidders")
+        # print(f"Bidders: {bidders} | Type: {type(bidders)}")
+        winner = ""
+        winning_bid = DB_obj_new.get("bid")
+        for person in bidders:
+            value_bid = bidders.get(person)
+            if value_bid == winning_bid:
+                winner = person
+        COLLECTION_LISTINGS.update_one(filter, {"$set": {"time": str(0)}})
+        COLLECTION_LISTINGS.update_one(filter, {"$set": {"winner": winner}})
+        COLLECTION_LISTINGS.update_one(filter, {"$set": {"open": False}})
 
 
 

@@ -3,7 +3,7 @@
 {% block content %}
     <style>
     body {
-          background-image: url('static/style_images/currency.jpg');
+          background-image: url('/static/style_images/currency.jpg');
           background-repeat: no-repeat;
           background-attachment: fixed;
           background-size: cover;
@@ -11,6 +11,6 @@
     </style>
 
     <script type="text/javascript">setInterval(function (){socketio.emit("retrieve_won_listings");}, 1000)</script>
-    <div class="gallery" id="gallery_div_won">
+    <div class="gallery" id="gallery_div_won_{{ page_id }}">
     </div>
 {% endblock %}
